@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Line} from 'react-chartjs-2';
+import {Scatter} from 'react-chartjs-2';
 import moment from 'moment';
 import {DatetimePickerTrigger} from 'rc-datetime-picker';
 import Toggle from 'react-toggle';
@@ -10,9 +10,10 @@ import "./toggle.css";
 import './index.css';
 
 const data = {
-  labels: [], // Labels to update
+  // labels: ['Scatter'],
   datasets: [
     {
+      showLine: true,
       label: 'Datapoints',
       fill: true,
       lineTension: 0.1,
@@ -132,9 +133,7 @@ class GraphContainer extends React.Component {
   constructor(props) {
     super(props);
     this.lastCursor = null;
-    this.x = [];
-    this.y = [];
-    this.indx = 0;
+    this.vals = [];
     this.state = {
       startTime: moment(),
       endTime: moment(),
@@ -168,14 +167,23 @@ class GraphContainer extends React.Component {
         current: true,
         endTime: null
       })
-      this.interval = setInterval(() => this.getData(), 1500);
+      this.intervalHandler();
     } else {
+      clearTimeout(this.timeout);
       this.setState({
         current: false
       })
-      clearInterval(this.interval);
       this.handleChangeEnd(moment());
     }
+  }
+
+  intervalHandler = () => {
+    this.getData().then(() => {
+      // Run it again, if current is set
+      if (this.state.current) {
+        this.timeout = setTimeout(this.intervalHandler, 2000);
+      }
+    });
   }
 
   // POST using OAuth creds to retrieve datastore based on time
@@ -196,27 +204,40 @@ class GraphContainer extends React.Component {
           'Content-Type': 'application/json',
       },
       body: JSON.stringify(req)}).then(val => val.json().then(e => {
-        if ('entityResults' in e.batch) {
-          if (this.lastCursor === null) {
-            this.x = [];
-            this.y = [];
-            this.indx = 0;
+        // Try safety
+        console.log(e);
+        try {
+          if ('entityResults' in e.batch) {
+            console.log()
+            if (this.lastCursor === null) {
+              this.vals = [];
+            } else {
+              this.vals = this.vals.slice(); // Return a copy
+            }
+            e.batch.entityResults.forEach(d => {
+              let elem = {};
+              elem.y = parseFloat(d.entity.properties.data.stringValue);
+              elem.x = moment(d.entity.properties.published_at.stringValue).unix()
+                          -this.state.startTime.unix(); // Return value since num
+              elem.t = moment(d.entity.properties.published_at.stringValue);
+              this.vals.push(elem);
+            });
           } else {
-            this.x = this.x.slice();
-            this.y = this.y.slice();
+            // Clear our values
+            this.vals = [];
           }
-          e.batch.entityResults.forEach(d => {
-            this.x.push(parseInt(d.entity.properties.data.stringValue));
-            this.y.push(this.indx);
-            this.indx++;
-          });
-        }
-        if (e.batch.moreResults === "NOT_FINISHED") {
-          this.lastCursor = e.batch.endCursor;
-          return this.getDataHandler();
-        } else {
-          this.lastCursor = null;
-          return true;
+          if (e.batch.moreResults === "NOT_FINISHED") {
+            console.log("Not done");
+            this.lastCursor = e.batch.endCursor;
+            return this.getDataHandler();
+          } else {
+            console.log("Done");
+            console.log(this.state);
+            this.lastCursor = null;
+            return true;
+          }
+        } catch (error) {
+          console.log(error);
         }
       }));
   }
@@ -224,21 +245,22 @@ class GraphContainer extends React.Component {
   // Handler for our data, which sets up a promise 
   // that updates once our data has been set up
   getData = () => {
-    this.setState({
-      updating: true // Set updating to true so we render notice
-    })
-    this.getDataHandler().then(() => {
-      let oldData = this.state.graph.datasets[0];
-      let newData = {
-      ...oldData, // Spread operator allows us to copy things
-      };
-      newData.data = this.x;
+    return new Promise(resolve => {
       this.setState({
-        graph: {
-          labels: this.y,
-          datasets: [newData]
-        },
-        updating: false // done updating
+        updating: true // Set updating to true so we render notice
+      })
+      this.getDataHandler().then(() => {
+        let newData = {
+        ...this.state.graph.datasets[0], // Spread operator allows us to copy things
+        data: this.vals
+        };
+        this.setState({
+          graph: {
+            datasets: [newData]
+          },
+          updating: false // done updating
+        });
+        resolve();
       });
     });
   }
@@ -312,12 +334,20 @@ class GraphContainer extends React.Component {
 class Graph extends React.Component {
   render = () => {
     return (<div>
-      <Line 
+      <Scatter 
         data = {this.props.data}
         options={{
-          animation: (this.props.animations) ? {
+          animation: ((this.props.animations) ? {
             duration : 500,
-          } : false
+          } : false),
+          scales : {
+            xAxes: [{
+              type: 'time',
+              time: {
+                unit: 'second'
+              }
+            }]
+          }
         }}
       />
     </div>);
@@ -343,8 +373,13 @@ class DayRange extends React.Component {
           moment = {this.props.endVal}
           onChange = {this.props.onChangeEnd}
           disabled = {(this.props.endVal === null) ? true : false}>
-          <input type="text" value={(this.props.endVal === null) ?
-            "Current" : this.props.endVal.format('YYYY-MM-DD HH:mm')} readOnly />
+          <input 
+            type = "text" 
+            value = {(this.props.endVal === null) ?
+              "Current" : this.props.endVal.format('YYYY-MM-DD HH:mm')} 
+            readOnly
+            disabled = {(this.props.endVal === null) ? true : false}
+          />
         </DatetimePickerTrigger>
         </div>);
   }
