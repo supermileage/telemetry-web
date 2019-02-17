@@ -155,7 +155,6 @@ class GraphContainer extends React.Component {
 
   // Handle the current boolean for "live" plotting
   handleCurrent = (e) => {
-    console.log(e);
     let current = e.target.checked;
     if (current) {
       this.setState({
@@ -180,7 +179,6 @@ class GraphContainer extends React.Component {
 
     // Change our lastCursor value
     if (this.lastCursor !== null) req.query.startCursor = this.lastCursor;
-    console.log(req);
     // Call our fetch
     await fetch('https://datastore.googleapis.com/v1/projects/ubc-supermileage-telemetry-v2:runQuery?prettyPrint=true&alt=json', 
       {
@@ -191,10 +189,6 @@ class GraphContainer extends React.Component {
           'Content-Type': 'application/json',
       },
       body: JSON.stringify(req)}).then(val => val.json().then(e => {
-        // TODO continue to fetch results until "NO_MORE_RESULTS"
-        // TODO save cursor position and clear it on live update toggle
-        // this is better for our upates 
-        // if (e.batch.entityResults.moreResults == "NOT_FINISHED")
         if ('entityResults' in e.batch) {
           if (this.lastCursor === null) {
             this.x = [];
@@ -211,11 +205,9 @@ class GraphContainer extends React.Component {
           });
         }
         if (e.batch.moreResults === "NOT_FINISHED") {
-          console.log("Not finished");
           this.lastCursor = e.batch.endCursor;
           return this.getDataHandler();
         } else {
-          console.log("Finished");
           this.lastCursor = null;
           return true;
         }
@@ -226,14 +218,11 @@ class GraphContainer extends React.Component {
   // that updates once our data has been set up
   getData = () => {
     this.getDataHandler().then(() => {
-      console.log("resolved");
       let oldData = this.state.graph.datasets[0];
       let newData = {
       ...oldData,
       };
       newData.data = this.x;
-      console.log("Set state");
-      console.log(this.state);
       this.setState({
         graph: {
           labels: this.y,
@@ -249,6 +238,7 @@ class GraphContainer extends React.Component {
       loggedIn: true
     });
     console.log(response);
+    console.log("Success");
     this.token = response.accessToken;
   }
 
