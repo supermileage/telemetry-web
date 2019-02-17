@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/telemetrics-view/precache-manifest.81ed92bdb818036e88188ed6b66ca215.js"
+  "/telemetrics-view/precache-manifest.6dc0705dc912ef5defcd37e17cfc251c.js"
 );
 
 workbox.clientsClaim();
