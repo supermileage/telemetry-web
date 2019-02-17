@@ -243,10 +243,10 @@ class GraphContainer extends React.Component {
   // Handler for our data, which sets up a promise 
   // that updates once our data has been set up
   getData = () => {
+    this.setState({
+      updating: true // Set updating to true so we render notice
+    });
     return new Promise(resolve => {
-      this.setState({
-        updating: true // Set updating to true so we render notice
-      })
       this.getDataHandler().then(() => {
         let newData = {
         ...this.state.graph.datasets[0], // Spread operator allows us to copy things
@@ -281,7 +281,10 @@ class GraphContainer extends React.Component {
 
   // Prevent an update when we're currently polling
   buttonAction = () => {
-    if (this.lastCursor === null) this.getData();
+    if (!this.state.updating) {
+      console.log("Button press registered");
+      this.getData();
+    }
   }
 
   buttonInit = () => {
