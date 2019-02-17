@@ -2,6 +2,10 @@
 
 View the page [here](http://www.supermileage.ca/telemetrics-view/). You'll have to log in with the UBCST Google account for verification.
 
+### `npm run deploy`
+
+With the latest changes, the GitHub pages website can be updated by running that command.
+
 ### `npm start`
 
 Runs the app in the development mode.<br>
