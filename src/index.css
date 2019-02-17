@@ -17,6 +17,10 @@ body {
   margin: auto;
 }
 
+.toggle {
+  margin-left: 20px;
+}
+
 #root {
   padding: 70px 0;
 }

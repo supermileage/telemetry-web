@@ -1,0 +1,6 @@
+# Index configuration file for Datastore
+indexes:
+- kind: ParticleEvent
+  properties:
+    - name: published_at
+    - name: data

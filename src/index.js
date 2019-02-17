@@ -13,7 +13,7 @@ const data = {
   labels: [], // Labels to update
   datasets: [
     {
-      label: 'Test',
+      label: 'Datapoints',
       fill: true,
       lineTension: 0.1,
       backgroundColor: 'rgba(75,192,192,0.4)',
@@ -36,18 +36,6 @@ const data = {
   ]
 };
 
-// Parse a date object into the format we need for the datastore
-const parseDate = (d) => {
-  if (d == null) return parseDate(new Date())
-  return d.getFullYear() + "-" 
-        + (d.getMonth() + 1).toString().padStart(2, '0') + "-"
-        + d.getDate().toString().padStart(2, '0') + "T" 
-        + d.getHours().toString().padStart(2, '0') + ":" 
-        + d.getMinutes().toString().padStart(2, '0') + ":" 
-        + d.getSeconds().toString().padStart(2, '0') + "." 
-        + d.getMilliseconds().toString().padStart(3, '0') + "Z";
-}
-
 // Our graph container to hold all our objects, and also
 // to store state of our objects
 class GraphContainer extends React.Component {
@@ -58,6 +46,7 @@ class GraphContainer extends React.Component {
       endTime: new Date(),
       current: false,
       loggedIn: false,
+      graph: data,
       animations: true
     }
   }
@@ -78,6 +67,7 @@ class GraphContainer extends React.Component {
 
   // Handle the current boolean for "live" plotting
   handleCurrent = (e) => {
+    console.log(e);
     let current = e.target.checked;
     if (current) {
       this.setState({
@@ -103,15 +93,117 @@ class GraphContainer extends React.Component {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        gqlQuery: {
-          queryString: "SELECT * FROM ParticleEvent WHERE ParticleEvent.published_at >= '" 
-          + parseDate(this.state.startTime) + ((this.state.current) ? "'" : ("' AND ParticleEvent.published_at <= '"
-          + parseDate(this.state.endTime) + "'")),
-          allowLiterals: true
+      body: JSON.stringify((this.state.current) ? {
+        query: {
+          filter: {
+            propertyFilter: {
+              op: "GREATER_THAN_OR_EQUAL",
+              property: {
+                name: "published_at"
+              },
+              value: {
+                stringValue: this.state.startTime.toISOString()
+              }
+            }
+          },
+          kind: [
+            {
+              name: "ParticleEvent"
+            }
+          ],
+          projection: [
+            {
+              property: {
+                name: "data"
+              }
+            },
+            {
+              property: {
+                name: "published_at"
+              }
+            }
+          ]
         }
-      })
+        } : {
+          query: {
+            filter: {
+              compositeFilter: {
+                filters: [
+                  {
+                    propertyFilter: {
+                      op: "GREATER_THAN_OR_EQUAL",
+                      property: {
+                        name: "published_at"
+                      },
+                      value: {
+                        stringValue: this.state.startTime.toISOString()
+                      }
+                    }
+                  },
+                  {
+                    propertyFilter: {
+                      op: "LESS_THAN_OR_EQUAL",
+                      property: {
+                        name: "published_at"
+                      },
+                      value: {
+                        stringValue: this.state.endTime.toISOString()
+                      }
+                    }
+                  }
+                ],
+                op: "AND"
+              }
+            }
+            ,
+            kind: [
+              {
+                name: "ParticleEvent"
+              }
+            ],
+            projection: [
+              {
+                property: {
+                  name: "data"
+                }
+              },
+              {
+                property: {
+                  name: "published_at"
+                }
+              }
+            ]
+          }
+        })
   }).then(val => val.json().then(e => {
+    // TODO continue to fetch results until "NO_MORE_RESULTS"
+    // TODO save cursor position and clear it on live update toggle
+    // this is better for our upates 
+    // if (e.batch.entityResults.moreResults == "NOT_FINISHED")
+    let x = [];
+    let y = [];
+    let val = 0;
+    if ('entityResults' in e.batch) {
+      e.batch.entityResults.forEach(d => {
+        x.push(parseInt(d.entity.properties.data.stringValue));
+        y.push(val);
+        val++;
+      });
+      let oldData = this.state.graph.datasets[0];
+      let newData = {
+        ...oldData,
+      };
+      newData.data = x;
+      this.setState({
+        graph: {
+          labels: y,
+          datasets: [newData]
+        }
+      });
+    }
+    console.log("Results:");
+    console.log(x);
+    console.log(y);
     console.log(e.batch.entityResults);
     console.log(e);
   }));
@@ -149,22 +241,27 @@ class GraphContainer extends React.Component {
           onFailure = {this.responseFail} 
         /></div>);
     } else {
-      console.log("rerendering");
       return (<div><div className="header">
         <DayRange 
         startVal = {this.state.startTime}
         endVal = {this.state.endTime}
         onChangeStart = {this.handleChangeStart}
         onChangeEnd = {this.handleChangeEnd}
-        isCurrent = {this.state.current}
-        isCurrentHandler = {this.handleCurrent}
       />
+        <label className="toggle">
+          <Toggle 
+            defaultChecked={this.state.current}
+            onChange={this.handleCurrent}
+          />
+        </label>
       {
         (this.state.current) ? 
         "" : this.buttonInit()
       }
+
       </div>
-      <Graph 
+      <Graph
+        data = {this.state.graph}
         animations = {this.state.animations}
       /></div>);
     }
@@ -178,37 +275,12 @@ class Graph extends React.Component {
   constructor(props) {
     super(props);
     this.val = 1;
-    this.state = data;
-  }
-
-  componentDidMount() {
-    this.interval = setInterval(() => {
-      let newLabels = (this.state.labels.length > 10) ?
-            this.state.labels.slice() : this.state.labels.slice();
-      let oldData = this.state.datasets[0];
-      var newData = {
-        ...oldData
-      };
-      newData.data = (oldData.data.length > 10) ? 
-              oldData.data.slice() : oldData.data.slice();
-      newLabels.push(this.val);
-      this.val++;
-      newData.data.push(Math.random());
-      this.setState({
-        labels: newLabels,
-        datasets: [newData]
-      });
-    }, 2000);
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.interval);
   }
   
   render = () => {
     return (<div>
       <Line 
-        data = {this.state}
+        data = {this.props.data}
         options={{
           animation: (this.props.animations) ? {
             duration : 500,
@@ -229,7 +301,7 @@ class DayRange extends React.Component {
         selected={this.props.startVal}
         selectsStart
         showTimeSelect
-        timeIntervals={15}
+        timeIntervals={2}
         startDate={this.props.startVal}
         endDate={this.props.endVal}
         onChange={this.props.onChangeStart}
@@ -241,21 +313,12 @@ class DayRange extends React.Component {
         placeholderText="Current"
         selectsEnd
         showTimeSelect
-        timeIntervals={15}
+        timeIntervals={2}
         startDate={this.props.startVal}
         endDate={this.props.endVal}
         onChange={this.props.onChangeEnd}
         dateFormat="MMMM d h:mm:ss aa"
         >
-        <div>
-          <label>
-          <Toggle 
-            defaultChecked={this.props.isCurrent}
-            onChange={this.props.isCurrentHandler}
-          />
-           <span>Get current values</span>
-          </label>
-        </div>
         </DatePicker></div>);
   }
 }

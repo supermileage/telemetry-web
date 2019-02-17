@@ -1,3 +1,7 @@
+# Telemetrics
+
+View the page [here](http://www.supermileage.ca/telemetrics-view/). You'll have to log in with the UBCST Google account for verification.
+
 ### `npm start`
 
 Runs the app in the development mode.<br>
