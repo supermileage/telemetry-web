@@ -1,10 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Line} from 'react-chartjs-2';
-import DatePicker from 'react-datepicker';
+import moment from 'moment';
+import {DatetimePickerTrigger} from 'rc-datetime-picker';
 import Toggle from 'react-toggle';
 import GoogleLogin from 'react-google-login';
-import "react-datepicker/dist/react-datepicker.css";
+import "./datetime.css";
 import "./toggle.css";
 import './index.css';
 
@@ -120,6 +121,11 @@ const request = (state) => {
   }
 };
 
+const shortcuts = {
+  'Today': moment(),
+  'Yesterday': moment().subtract(1, 'days'),
+};
+
 // Our graph container to hold all our objects, and also
 // to store state of our objects
 class GraphContainer extends React.Component {
@@ -130,8 +136,8 @@ class GraphContainer extends React.Component {
     this.y = [];
     this.indx = 0;
     this.state = {
-      startTime: new Date(),
-      endTime: new Date(),
+      startTime: moment(),
+      endTime: moment(),
       current: false,
       loggedIn: false,
       graph: data,
@@ -168,7 +174,7 @@ class GraphContainer extends React.Component {
         current: false
       })
       clearInterval(this.interval);
-      this.handleChangeEnd(new Date());
+      this.handleChangeEnd(moment());
     }
   }
 
@@ -272,15 +278,15 @@ class GraphContainer extends React.Component {
     } else {
       return (<div><div className="header">
         <DayRange 
-        startVal = {this.state.startTime}
-        endVal = {this.state.endTime}
-        onChangeStart = {this.handleChangeStart}
-        onChangeEnd = {this.handleChangeEnd}
-      />
+          startVal = {this.state.startTime}
+          endVal = {this.state.endTime}
+          onChangeStart = {this.handleChangeStart}
+          onChangeEnd = {this.handleChangeEnd}
+        />
         <label className="toggle">
           <Toggle 
-            defaultChecked={this.state.current}
-            onChange={this.handleCurrent}
+            defaultChecked = {this.state.current}
+            onChange = {this.handleCurrent}
           />
         </label>
       {
@@ -325,33 +331,30 @@ class Graph extends React.Component {
 
 
 class DayRange extends React.Component {
+  constructor(props) {
+    super(props);
+  }
   // Render my pickers; all the state is lifted up into 
   // the parent element, thus all the changes are handled
   // by props; this element does not have state
   render() {
-    return (<div id="pickers">{" Start "} <DatePicker
-        selected={this.props.startVal}
-        selectsStart
-        showTimeSelect
-        timeIntervals={2}
-        startDate={this.props.startVal}
-        endDate={this.props.endVal}
-        onChange={this.props.onChangeStart}
-        dateFormat="MMMM d h:mm:ss aa"
-        />
-        {" End "} 
-        <DatePicker 
-        selected={this.props.endVal}
-        placeholderText="Current"
-        selectsEnd
-        showTimeSelect
-        timeIntervals={2}
-        startDate={this.props.startVal}
-        endDate={this.props.endVal}
-        onChange={this.props.onChangeEnd}
-        dateFormat="MMMM d h:mm:ss aa"
-        >
-        </DatePicker></div>);
+    return (<div className="pickers">
+        <DatetimePickerTrigger
+          shortcuts = {shortcuts}
+          moment = {this.props.startVal}
+          onChange = {this.props.onChangeStart}>
+          <input type="text" value={this.props.startVal.format('YYYY-MM-DD HH:mm')} readOnly />
+        </DatetimePickerTrigger>
+        {' - '}
+        <DatetimePickerTrigger
+          shortcuts = {shortcuts}
+          moment = {this.props.endVal}
+          onChange = {this.props.onChangeEnd}
+          disabled = {(this.props.endVal === null) ? true : false}>
+          <input type="text" value={(this.props.endVal === null) ?
+            "Current" : this.props.endVal.format('YYYY-MM-DD HH:mm')} readOnly />
+        </DatetimePickerTrigger>
+        </div>);
   }
 }
 
