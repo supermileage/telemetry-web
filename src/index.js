@@ -310,11 +310,6 @@ class GraphContainer extends React.Component {
  * Component that holds our graph object. 
  */
 class Graph extends React.Component {
-  constructor(props) {
-    super(props);
-    this.val = 1;
-  }
-  
   render = () => {
     return (<div>
       <Line 
@@ -331,9 +326,6 @@ class Graph extends React.Component {
 
 
 class DayRange extends React.Component {
-  constructor(props) {
-    super(props);
-  }
   // Render my pickers; all the state is lifted up into 
   // the parent element, thus all the changes are handled
   // by props; this element does not have state
