@@ -230,15 +230,13 @@ class GraphContainer extends React.Component {
             console.log("Not done");
             this.lastCursor = e.batch.endCursor;
             return this.getDataHandler();
-          } else {
-            console.log("Done");
-            console.log(this.state);
-            this.lastCursor = null;
-            return true;
           }
         } catch (error) {
           console.log(error);
         }
+        console.log("Done");
+        this.lastCursor = null;
+        return true;
       }));
   }
 
@@ -281,9 +279,14 @@ class GraphContainer extends React.Component {
     console.log("Failed");
   }
 
+  // Prevent an update when we're currently polling
+  buttonAction = () => {
+    if (this.lastCursor === null) this.getData();
+  }
+
   buttonInit = () => {
       return (<span className="updateButton">
-        <button onClick={this.getData}>Update</button>
+        <button onClick={this.buttonAction}>Update</button>
       </span>);
   }
 
