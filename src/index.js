@@ -32,7 +32,7 @@ const data = {
       pointHitRadius: 10,
       data: [] // Data to update
     }
-  ]
+  ],
 };
 
 const request = (state) => {
@@ -135,7 +135,8 @@ class GraphContainer extends React.Component {
       current: false,
       loggedIn: false,
       graph: data,
-      animations: true
+      animations: true,
+      updating: false
     }
   }
 
@@ -217,17 +218,21 @@ class GraphContainer extends React.Component {
   // Handler for our data, which sets up a promise 
   // that updates once our data has been set up
   getData = () => {
+    this.setState({
+      updating: true // Set updating to true so we render notice
+    })
     this.getDataHandler().then(() => {
       let oldData = this.state.graph.datasets[0];
       let newData = {
-      ...oldData,
+      ...oldData, // Spread operator allows us to copy things
       };
       newData.data = this.x;
       this.setState({
         graph: {
           labels: this.y,
           datasets: [newData]
-        }
+        },
+        updating: false // done updating
       });
     });
   }
@@ -282,7 +287,10 @@ class GraphContainer extends React.Component {
         (this.state.current) ? 
         "" : this.buttonInit()
       }
-
+      {
+        (this.state.updating) ?
+        <div className="updating">Updating..</div> : ""
+      }
       </div>
       <Graph
         data = {this.state.graph}

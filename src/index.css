@@ -21,6 +21,10 @@ body {
   margin-left: 20px;
 }
 
+.updating {
+  margin-left: 20px;
+}
+
 #root {
   padding: 70px 0;
 }
