@@ -1,20 +1,25 @@
 body {
-    font: 14px "Century Gothic", Futura, sans-serif;
-    margin: 20px;
-  }
+  font: 14px "Century Gothic", Futura, sans-serif;
+  margin: 20px;
+}
+
+/* Delegate input styling to Bulma */
+input {
+  border: none;
+}
+
+input:focus {
+  border: none;
+  outline: none;
+}
+
+input:disabled {
+  background: white;
+}
 
 .pickers {
-  display:flex;
-  flex-direction:row;
-}
-
-.header {
-  display:flex;
-  flex-direction:row;
-}
-
-.updateButton {
-  margin-left: 20px;
+  display: flex;
+  flex-direction: row;
 }
 
 .login {
@@ -24,12 +29,15 @@ body {
 
 .toggle {
   margin-left: 20px;
+  margin-top: 1px;
 }
 
-.updating {
-  margin-left: 20px;
+.floater {
+  position: absolute;
+  top: -50px;
+  z-index: 10;
 }
 
 #root {
-  padding: 70px 0;
+  padding: 50px 0;
 }

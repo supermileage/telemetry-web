@@ -5,14 +5,15 @@ import moment from 'moment';
 import {DatetimePickerTrigger} from 'rc-datetime-picker';
 import Toggle from 'react-toggle';
 import GoogleLogin from 'react-google-login';
-import "./datetime.css";
-import "./toggle.css";
+import './datetime.css';
+import './toggle.css';
 import './index.css';
+import 'bulma/css/bulma.css';
 
 const data = {
-  // labels: ['Scatter'],
   datasets: [
     {
+      spanGaps: false,
       showLine: true,
       label: 'Datapoints',
       fill: true,
@@ -141,7 +142,8 @@ class GraphContainer extends React.Component {
       loggedIn: false,
       graph: data,
       animations: true,
-      updating: false
+      updating: false,
+      infoOn: true
     }
   }
 
@@ -177,13 +179,12 @@ class GraphContainer extends React.Component {
     }
   }
 
-  intervalHandler = () => {
-    this.getData().then(() => {
-      // Run it again, if current is set
-      if (this.state.current) {
-        this.timeout = setTimeout(this.intervalHandler, 2000);
-      }
-    });
+  intervalHandler = async () => {
+    await this.getData();
+    console.log("get data done, resetting");
+    if (this.state.current) {
+      this.timeout = setTimeout(this.intervalHandler, 2000);
+    }
   }
 
   // POST using OAuth creds to retrieve datastore based on time
@@ -217,9 +218,14 @@ class GraphContainer extends React.Component {
             e.batch.entityResults.forEach(d => {
               let elem = {};
               elem.y = parseFloat(d.entity.properties.data.stringValue);
-              elem.x = moment(d.entity.properties.published_at.stringValue).unix()
-                          -this.state.startTime.unix(); // Return value since num
-              elem.t = moment(d.entity.properties.published_at.stringValue);
+              elem.x = moment(d.entity.properties.published_at.stringValue);
+              // Check if the last element was greater than 10 minutes ago
+              if (this.vals.length > 0 && elem.x.unix() - moment(this.vals[this.vals.length - 1].x).unix() > 600) {
+                this.vals.push({
+                  y: NaN,
+                  x: elem.x
+                });
+              }
               this.vals.push(elem);
             });
           } else {
@@ -242,24 +248,21 @@ class GraphContainer extends React.Component {
 
   // Handler for our data, which sets up a promise 
   // that updates once our data has been set up
-  getData = () => {
+  getData = async () => {
     this.setState({
       updating: true // Set updating to true so we render notice
     });
-    return new Promise(resolve => {
-      this.getDataHandler().then(() => {
-        let newData = {
-        ...this.state.graph.datasets[0], // Spread operator allows us to copy things
-        data: this.vals
-        };
-        this.setState({
-          graph: {
-            datasets: [newData]
-          },
-          updating: false // done updating
-        });
-        resolve();
-      });
+    await this.getDataHandler();
+    console.log("data handling done");
+    let newData = {
+      ...this.state.graph.datasets[0], // Spread operator allows us to copy things
+      data: this.vals
+      };
+    this.setState({
+      graph: {
+        datasets: [newData]
+      },
+      updating: false // done updating
     });
   }
 
@@ -287,49 +290,80 @@ class GraphContainer extends React.Component {
     }
   }
 
-  buttonInit = () => {
-      return (<span className="updateButton">
-        <button onClick={this.buttonAction}>Update</button>
-      </span>);
+  // This code sucks
+  buttonProvider = () => {
+    return (this.state.current) ? (<button 
+      className="button is-rounded is-info is-small is-loading" 
+      onClick={this.buttonAction} 
+      disabled
+    >Update</button>) : (this.state.updating) ? (<button 
+      className="button is-rounded is-info is-small is-loading" 
+      onClick={this.buttonAction} 
+    >Update</button>) : (<button 
+      className="button is-rounded is-info is-small" 
+      onClick={this.buttonAction} 
+    >Update</button>);
+  }
+
+  infoHide = () => {
+    this.setState({
+      infoOn: false
+    });
   }
 
   // Render element based on logged in state
   render() {
+    const header = (<div className="container notification is-info floater">Welcome! If it's your first time here,
+    the toggle sets whether the data is updated live. Otherwise, you can grab specific data by selecting 
+    your time range, then pressing "Update". You may encounter errors if you're not authorized to access the 
+    datastore. You can close this message on the top right.
+    <button onClick={this.infoHide} className="delete"></button>
+    </div>);
     if (!this.state.loggedIn) {
-      return (<div className="login">
+      return (<div>
+      <div className="container notification is-link floater">To get started, log in to generate an OAuth token.</div>
+      <div className="login">
         <GoogleLogin
           clientId = "617338661646-v92ol8vhd4nl44vpntkv4jpjbq5hahmo.apps.googleusercontent.com"
           buttonText = "Login"
           onSuccess = {this.responseGoogle}
           onFailure = {this.responseFail} 
-        /></div>);
+        /></div></div>);
     } else {
-      return (<div><div className="header">
-        <DayRange 
-          startVal = {this.state.startTime}
-          endVal = {this.state.endTime}
-          onChangeStart = {this.handleChangeStart}
-          onChangeEnd = {this.handleChangeEnd}
-        />
-        <label className="toggle">
-          <Toggle 
-            defaultChecked = {this.state.current}
-            onChange = {this.handleCurrent}
-          />
-        </label>
-      {
-        (this.state.current) ? 
-        "" : this.buttonInit()
-      }
-      {
-        (this.state.updating) ?
-        <div className="updating">Updating..</div> : ""
-      }
+      return (<div>
+      {(this.state.infoOn) ? header : undefined}
+      <div className="container notification">
+        <div className="columns">
+          <div className="column is-narrow">
+            <DayRange
+              startVal = {this.state.startTime}
+              endVal = {this.state.endTime}
+              onChangeStart = {this.handleChangeStart}
+              onChangeEnd = {this.handleChangeEnd}
+            />
+          </div>
+          <div className="column">
+            <div className="columns is-mobile">
+              <div className="toggle column is-narrow">
+                <Toggle
+                  defaultChecked = {this.state.current}
+                  onChange = {this.handleCurrent}
+                />
+              </div>
+              <div className="column is-narrow">
+                {this.buttonProvider()}
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <Graph
-        data = {this.state.graph}
-        animations = {this.state.animations}
-      /></div>);
+      <div className="container notification has-background-white-bis">
+        <Graph
+          data = {this.state.graph}
+          animations = {this.state.animations}
+        />
+      </div>
+      </div>);
     }
   }
 }
@@ -348,12 +382,26 @@ class Graph extends React.Component {
           } : false),
           scales : {
             xAxes: [{
+              gridLines: {
+                display: false,
+              },
               type: 'time',
-              time: {
-                unit: 'second'
-              }
+              distribution: 'linear', // Distances can vary, based on time
+              scaleLabel: {
+                display: true,
+                labelString: "Time"
+              },
+            }],
+            yAxes: [{
+              gridLines: {
+                display: false,
+              },
+              scaleLabel: {
+                display: true,
+                labelString: "Velocity"
+              },
             }]
-          }
+          },
         }}
       />
     </div>);
@@ -368,13 +416,14 @@ class DayRange extends React.Component {
   render() {
     return (<div className="pickers">
         <DatetimePickerTrigger
+          className = "input is-rounded is-small"
           shortcuts = {shortcuts}
           moment = {this.props.startVal}
           onChange = {this.props.onChangeStart}>
           <input type="text" value={this.props.startVal.format('YYYY-MM-DD HH:mm')} readOnly />
         </DatetimePickerTrigger>
-        {' - '}
         <DatetimePickerTrigger
+          className = "input is-rounded is-small"
           shortcuts = {shortcuts}
           moment = {this.props.endVal}
           onChange = {this.props.onChangeEnd}
