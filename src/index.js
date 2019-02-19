@@ -282,26 +282,19 @@ class GraphContainer extends React.Component {
     console.log("Failed");
   }
 
-  // Prevent an update when we're currently polling
-  buttonAction = () => {
-    if (!this.state.updating) {
-      console.log("Button press registered");
-      this.getData();
-    }
-  }
-
   // This code sucks
   buttonProvider = () => {
     return (this.state.current) ? (<button 
       className="button is-rounded is-info is-small is-loading" 
-      onClick={this.buttonAction} 
+      onClick={this.getData} 
       disabled
     >Update</button>) : (this.state.updating) ? (<button 
       className="button is-rounded is-info is-small is-loading" 
-      onClick={this.buttonAction} 
+      onClick={this.getData}
+      disabled
     >Update</button>) : (<button 
       className="button is-rounded is-info is-small" 
-      onClick={this.buttonAction} 
+      onClick={this.getData} 
     >Update</button>);
   }
 
