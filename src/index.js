@@ -414,29 +414,33 @@ class DayRange extends React.Component {
   // the parent element, thus all the changes are handled
   // by props; this element does not have state
   render() {
-    return (<div className="pickers">
-        <DatetimePickerTrigger
-          className = "input is-rounded is-small"
-          shortcuts = {shortcuts}
-          moment = {this.props.startVal}
-          onChange = {this.props.onChangeStart}>
-          <input type="text" value={this.props.startVal.format('YYYY-MM-DD HH:mm')} readOnly />
-        </DatetimePickerTrigger>
-        <DatetimePickerTrigger
-          className = "input is-rounded is-small"
-          shortcuts = {shortcuts}
-          moment = {this.props.endVal}
-          onChange = {this.props.onChangeEnd}
-          disabled = {(this.props.endVal === null) ? true : false}>
-          <input 
-            type = "text" 
-            value = {(this.props.endVal === null) ?
-              "Current" : this.props.endVal.format('YYYY-MM-DD HH:mm')} 
-            readOnly
-            disabled = {(this.props.endVal === null) ? true : false}
-          />
-        </DatetimePickerTrigger>
-        </div>);
+    return (<div className="columns">
+        <div className="column">
+          <DatetimePickerTrigger
+            className = "input is-rounded is-small"
+            shortcuts = {shortcuts}
+            moment = {this.props.startVal}
+            onChange = {this.props.onChangeStart}>
+            <input type="text" value={this.props.startVal.format('YYYY-MM-DD HH:mm')} readOnly />
+          </DatetimePickerTrigger>
+          </div>
+        <div className="column">
+          <DatetimePickerTrigger
+            className = "input is-rounded is-small"
+            shortcuts = {shortcuts}
+            moment = {this.props.endVal}
+            onChange = {this.props.onChangeEnd}
+            disabled = {(this.props.endVal === null) ? true : false}>
+            <input 
+              type = "text" 
+              value = {(this.props.endVal === null) ?
+                "Current" : this.props.endVal.format('YYYY-MM-DD HH:mm')} 
+              readOnly
+              disabled = {(this.props.endVal === null) ? true : false}
+            />
+          </DatetimePickerTrigger>
+        </div>
+      </div>);
   }
 }
 
