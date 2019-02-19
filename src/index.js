@@ -313,12 +313,12 @@ class GraphContainer extends React.Component {
 
   // Render element based on logged in state
   render() {
-    const header = (<div className="container notification is-info floater">Welcome! If it's your first time here,
+    const header = (<div className="container"><div className="notification is-info">Welcome! If it's your first time here,
     the toggle sets whether the data is updated live. Otherwise, you can grab specific data by selecting 
     your time range, then pressing "Update". You may encounter errors if you're not authorized to access the 
     datastore. You can close this message on the top right.
     <button onClick={this.infoHide} className="delete"></button>
-    </div>);
+    </div></div>);
     if (!this.state.loggedIn) {
       return (<div>
       <div className="container notification is-link floater">To get started, log in to generate an OAuth token.</div>

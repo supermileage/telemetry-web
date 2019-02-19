@@ -33,9 +33,11 @@ input:disabled {
 }
 
 .floater {
-  position: absolute;
-  top: -50px;
+  /* position: relative;
+  top: 10px;
+  width: 50vw;;
   z-index: 10;
+  float: right; */
 }
 
 #root {
