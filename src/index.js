@@ -5,128 +5,11 @@ import moment from 'moment';
 import {DatetimePickerTrigger} from 'rc-datetime-picker';
 import Toggle from 'react-toggle';
 import GoogleLogin from 'react-google-login';
+import {data, request, shortcuts} from './constants.js';
 import './datetime.css';
 import './toggle.css';
 import './index.css';
 import 'bulma/css/bulma.css';
-
-const data = {
-  datasets: [
-    {
-      spanGaps: false,
-      showLine: true,
-      label: 'Datapoints',
-      fill: true,
-      lineTension: 0.1,
-      backgroundColor: 'rgba(75,192,192,0.4)',
-      borderColor: 'rgba(75,192,192,1)',
-      borderCapStyle: 'butt',
-      borderDash: [],
-      borderDashOffset: 0.0,
-      borderJoinStyle: 'miter',
-      pointBorderColor: 'rgba(75,192,192,1)',
-      pointBackgroundColor: '#fff',
-      pointBorderWidth: 1,
-      pointHoverRadius: 5,
-      pointHoverBackgroundColor: 'rgba(75,192,192,1)',
-      pointHoverBorderColor: 'rgba(220,220,220,1)',
-      pointHoverBorderWidth: 2,
-      pointRadius: 1,
-      pointHitRadius: 10,
-      data: [] // Data to update
-    }
-  ],
-};
-
-const request = (state) => {
-  return (state.current) ? {
-    query: {
-      filter: {
-        propertyFilter: {
-          op: "GREATER_THAN_OR_EQUAL",
-          property: {
-            name: "published_at"
-          },
-          value: {
-            stringValue: state.startTime.toISOString()
-          }
-        }
-      },
-      kind: [
-        {
-          name: "ParticleEvent"
-        }
-      ],
-      projection: [
-        {
-          property: {
-            name: "data"
-          }
-        },
-        {
-          property: {
-            name: "published_at"
-          }
-        }
-      ],
-    }
-    } : {
-      query: {
-        filter: {
-          compositeFilter: {
-            filters: [
-              {
-                propertyFilter: {
-                  op: "GREATER_THAN_OR_EQUAL",
-                  property: {
-                    name: "published_at"
-                  },
-                  value: {
-                    stringValue: state.startTime.toISOString()
-                  }
-                }
-              },
-              {
-                propertyFilter: {
-                  op: "LESS_THAN_OR_EQUAL",
-                  property: {
-                    name: "published_at"
-                  },
-                  value: {
-                    stringValue: state.endTime.toISOString()
-                  }
-                }
-              }
-            ],
-            op: "AND"
-          }
-        }
-        ,
-        kind: [
-          {
-            name: "ParticleEvent"
-          }
-        ],
-        projection: [
-          {
-            property: {
-              name: "data"
-            }
-          },
-          {
-            property: {
-              name: "published_at"
-            }
-          }
-        ]
-      }
-  }
-};
-
-const shortcuts = {
-  'Today': moment(),
-  'Yesterday': moment().subtract(1, 'days'),
-};
 
 // Our graph container to hold all our objects, and also
 // to store state of our objects
@@ -189,9 +72,9 @@ class GraphContainer extends React.Component {
 
   // POST using OAuth creds to retrieve datastore based on time
   // Async means it returns an implicit Promise that we will resolve later
-  getDataHandler = async () => {
+  getDataHandler = async (type) => {
     // Build our query
-    let req = request(this.state);
+    let req = request(this.state, type);
 
     // Change our lastCursor value
     if (this.lastCursor !== null) req.query.startCursor = this.lastCursor;
@@ -235,7 +118,7 @@ class GraphContainer extends React.Component {
           if (e.batch.moreResults === "NOT_FINISHED") {
             console.log("Not done");
             this.lastCursor = e.batch.endCursor;
-            return this.getDataHandler();
+            return this.getDataHandler(type);
           }
         } catch (error) {
           console.log(error);
@@ -252,15 +135,16 @@ class GraphContainer extends React.Component {
     this.setState({
       updating: true // Set updating to true so we render notice
     });
-    await this.getDataHandler();
-    console.log("data handling done");
-    let newData = {
-      ...this.state.graph.datasets[0], // Spread operator allows us to copy things
-      data: this.vals
-      };
+    let newData = [
+      ...this.state.graph.datasets, // Spread operator allows us to copy things
+    ];
+    await this.getDataHandler('Payload');
+    newData[0].data = this.vals;
+    await this.getDataHandler('Something'); // TODO other data
+    newData[1].data = this.vals;
     this.setState({
       graph: {
-        datasets: [newData]
+        datasets: newData
       },
       updating: false // done updating
     });
@@ -382,18 +266,32 @@ class Graph extends React.Component {
               distribution: 'linear', // Distances can vary, based on time
               scaleLabel: {
                 display: true,
-                labelString: "Time"
+                labelString: 'Time'
               },
             }],
             yAxes: [{
+              id: 'Velocity',
+              position: 'left',
               gridLines: {
                 display: false,
               },
               scaleLabel: {
                 display: true,
-                labelString: "Velocity"
+                labelString: 'Velocity'
               },
-            }]
+              },
+              {
+                id: 'Power',
+                position: 'right',
+                gridLines: {
+                  display: false,
+                },
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Power'
+                },
+              }
+          ]
           },
         }}
       />
