@@ -52,6 +52,48 @@ export const data = {
         }
     ],
 };
+
+export const chartOptions = {
+    animation: {
+      duration : 500,
+    },
+    scales : {
+      xAxes: [{
+        gridLines: {
+          display: false,
+        },
+        type: 'time',
+        distribution: 'linear', // Distances can vary, based on time
+        scaleLabel: {
+          display: true,
+          labelString: 'Time'
+        },
+      }],
+      yAxes: [{
+        id: 'Velocity',
+        position: 'left',
+        gridLines: {
+          display: false,
+        },
+        scaleLabel: {
+          display: true,
+          labelString: 'Velocity'
+        },
+        },
+        {
+          id: 'Power',
+          position: 'right',
+          gridLines: {
+            display: false,
+          },
+          scaleLabel: {
+            display: true,
+            labelString: 'Power'
+          },
+        }
+    ]
+    },
+}
   
 export const request = (state, type) => {
 return (state.current) ? {

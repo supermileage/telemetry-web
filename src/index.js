@@ -5,7 +5,7 @@ import moment from 'moment';
 import {DatetimePickerTrigger} from 'rc-datetime-picker';
 import Toggle from 'react-toggle';
 import GoogleLogin from 'react-google-login';
-import {data, request, shortcuts} from './constants.js';
+import {data, chartOptions, request, shortcuts} from './constants.js';
 import './datetime.css';
 import './toggle.css';
 import './index.css';
@@ -18,13 +18,13 @@ class GraphContainer extends React.Component {
     super(props);
     this.lastCursor = null;
     this.vals = [];
+    this.chartRef = null;
     this.state = {
       startTime: moment(),
       endTime: moment(),
       current: false,
       loggedIn: false,
       graph: data,
-      animations: true,
       updating: false,
       infoOn: true
     }
@@ -138,10 +138,14 @@ class GraphContainer extends React.Component {
     let newData = [
       ...this.state.graph.datasets, // Spread operator allows us to copy things
     ];
-    await this.getDataHandler('Payload');
-    newData[0].data = this.vals;
-    await this.getDataHandler('Something'); // TODO other data
-    newData[1].data = this.vals;
+    if (this.chartRef !== null && this.chartRef.props.data.datasets[0]._meta[0].hidden !== true) {
+      await this.getDataHandler('Payload');
+      newData[0].data = this.vals;
+    }
+    if (this.chartRef !== null && this.chartRef.props.data.datasets[1]._meta[0].hidden !== true) {
+      await this.getDataHandler('Something'); // TODO other data
+      newData[1].data = this.vals;
+    }
     this.setState({
       graph: {
         datasets: newData
@@ -186,6 +190,13 @@ class GraphContainer extends React.Component {
     this.setState({
       infoOn: false
     });
+  }
+
+  getChartRef = (ref) => {
+    // Get reference to the chart 
+    if (this.chartRef === null && ref !== null) {
+      this.chartRef = ref;
+    }
   }
 
   // Render element based on logged in state
@@ -236,8 +247,8 @@ class GraphContainer extends React.Component {
       </div>
       <div className="container notification has-background-white-bis">
         <Graph
-          data = {this.state.graph}
-          animations = {this.state.animations}
+          data={this.state.graph}
+          chartRef={this.getChartRef}
         />
       </div>
       </div>);
@@ -252,48 +263,9 @@ class Graph extends React.Component {
   render = () => {
     return (<div>
       <Scatter 
-        data = {this.props.data}
-        options={{
-          animation: ((this.props.animations) ? {
-            duration : 500,
-          } : false),
-          scales : {
-            xAxes: [{
-              gridLines: {
-                display: false,
-              },
-              type: 'time',
-              distribution: 'linear', // Distances can vary, based on time
-              scaleLabel: {
-                display: true,
-                labelString: 'Time'
-              },
-            }],
-            yAxes: [{
-              id: 'Velocity',
-              position: 'left',
-              gridLines: {
-                display: false,
-              },
-              scaleLabel: {
-                display: true,
-                labelString: 'Velocity'
-              },
-              },
-              {
-                id: 'Power',
-                position: 'right',
-                gridLines: {
-                  display: false,
-                },
-                scaleLabel: {
-                  display: true,
-                  labelString: 'Power'
-                },
-              }
-          ]
-          },
-        }}
+        data={this.props.data}
+        options={chartOptions}
+        ref={ref => this.props.chartRef(ref)}
       />
     </div>);
   }
