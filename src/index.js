@@ -139,11 +139,11 @@ class GraphContainer extends React.Component {
       ...this.state.graph.datasets, // Spread operator allows us to copy things
     ];
     if (this.chartRef !== null && this.chartRef.props.data.datasets[0]._meta[0].hidden !== true) {
-      await this.getDataHandler('Payload');
+      await this.getDataHandler('Velocity');
       newData[0].data = this.vals;
     }
     if (this.chartRef !== null && this.chartRef.props.data.datasets[1]._meta[0].hidden !== true) {
-      await this.getDataHandler('Something'); // TODO other data
+      await this.getDataHandler('Power');
       newData[1].data = this.vals;
     }
     this.setState({
