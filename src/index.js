@@ -312,6 +312,7 @@ class Graph extends React.Component {
 class Map extends React.Component {
   constructor(props) {
     super(props);
+    this.lines = null;
     this.state = {
       map: null,
       loaded: false
@@ -336,11 +337,28 @@ class Map extends React.Component {
   }
 
   drawLineOnMap = () => {
-    this.state.map.panTo(new window.google.maps.LatLng(this.props.coordinates[0].lat, this.props.coordinates[0].lng));
-    new window.google.maps.Polyline({
-      path: this.props.coordinates, // This is just an array of coordinates
-      map: this.state.map
-    });
+    // If there were valid coordinates, do stuff
+    if (this.props.coordinates.length > 0) {
+      console.log("Drawing lines");
+      // Center around first element
+      this.state.map.panTo(new window.google.maps.LatLng(this.props.coordinates[0].lat, this.props.coordinates[0].lng));
+      // If no line initialized, initialize it 
+      if (this.lines === null) {
+        // Set the state
+        this.lines = new window.google.maps.Polyline({
+                    path: this.props.coordinates, // This is just an array of coordinates
+                    map: this.state.map
+                  });
+      } else {
+        this.lines.path = this.props.coordinates;
+        this.lines.setMap(this.state.map);
+      }
+    } else {
+      // Clear the map property from the line
+      if (this.lines !== null) {
+        this.lines.setMap(null);
+      }
+    }
   }
   
   // Load the Google map script when this component mounts
