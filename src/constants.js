@@ -210,6 +210,6 @@ return (state.current) ? {
 };
 
 export const shortcuts = {
-'Today': moment(),
-'Yesterday': moment().subtract(1, 'days'),
+    'Today': moment(),
+    'Yesterday': moment().subtract(1, 'days'),
 };

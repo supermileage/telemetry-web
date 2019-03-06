@@ -26,7 +26,8 @@ class GraphContainer extends React.Component {
       loggedIn: false,
       graph: data,
       updating: false,
-      infoOn: true
+      infoOn: true,
+      coordinates: []
     }
   }
 
@@ -72,7 +73,7 @@ class GraphContainer extends React.Component {
 
   // POST using OAuth creds to retrieve datastore based on time
   // Async means it returns an implicit Promise that we will resolve later
-  getDataHandler = async (type) => {
+  getDataHandler = async (type, mode) => {
     // Build our query
     let req = request(this.state, type);
 
@@ -99,17 +100,32 @@ class GraphContainer extends React.Component {
               this.vals = this.vals.slice(); // Return a copy
             }
             e.batch.entityResults.forEach(d => {
-              let elem = {};
-              elem.y = parseFloat(d.entity.properties.data.stringValue);
-              elem.x = moment(d.entity.properties.published_at.stringValue);
-              // Check if the last element was greater than 10 minutes ago
-              if (this.vals.length > 0 && elem.x.unix() - moment(this.vals[this.vals.length - 1].x).unix() > 600) {
-                this.vals.push({
-                  y: NaN,
-                  x: elem.x
-                });
+              // For a coordinate
+              if (mode === 0) {
+                let elem = {};
+                elem.y = parseFloat(d.entity.properties.data.stringValue);
+                elem.x = moment(d.entity.properties.published_at.stringValue);
+                // Check if the last element was greater than 10 minutes ago
+                if (this.vals.length > 0 && elem.x.unix() - moment(this.vals[this.vals.length - 1].x).unix() > 600) {
+                  this.vals.push({
+                    y: NaN,
+                    x: elem.x
+                  });
+                }
+                this.vals.push(elem);
+              } else {
+                // Convert to lat/long here
+                // Sample NMEA seq "$GPRMC,033404.000,A,4915.6993,N,12314.9440,W,0.45,107.40,060319,,,A*72", 
+                let NMEASeq = d.entity.properties.data.stringValue.split(',');
+                let lat = parseInt(parseInt(NMEASeq[3]) / 100) + parseFloat(parseFloat(NMEASeq[3]) % 100) / 60;
+                let lng = parseInt(parseInt(NMEASeq[5]) / 100) + parseFloat(parseFloat(NMEASeq[5]) % 100) / 60;
+                lat = (NMEASeq[4] === "S") ? -lat : lat;
+                lng = (NMEASeq[6] === "W") ? -lng : lng;
+                let elem = {};
+                elem.lat = lat;
+                elem.lng = lng;
+                this.vals.push(elem);
               }
-              this.vals.push(elem);
             });
           } else {
             // Clear our values
@@ -118,7 +134,7 @@ class GraphContainer extends React.Component {
           if (e.batch.moreResults === "NOT_FINISHED") {
             console.log("Not done");
             this.lastCursor = e.batch.endCursor;
-            return this.getDataHandler(type);
+            return this.getDataHandler(type, mode);
           }
         } catch (error) {
           console.log(error);
@@ -138,18 +154,25 @@ class GraphContainer extends React.Component {
     let newData = [
       ...this.state.graph.datasets, // Spread operator allows us to copy things
     ];
+    // Get velocity
     if (this.chartRef !== null && this.chartRef.props.data.datasets[0]._meta[0].hidden !== true) {
-      await this.getDataHandler('Velocity');
+      await this.getDataHandler('Velocity', 0);
       newData[0].data = this.vals;
     }
+    // Get power
     if (this.chartRef !== null && this.chartRef.props.data.datasets[1]._meta[0].hidden !== true) {
-      await this.getDataHandler('Power');
+      await this.getDataHandler('Power', 0);
       newData[1].data = this.vals;
     }
+    // Get location
+    await this.getDataHandler('Location', 1);
+    // Parse location here
+    console.log(this.vals);
     this.setState({
       graph: {
         datasets: newData
       },
+      coordinates: this.vals.slice(),
       updating: false // done updating
     });
   }
@@ -247,9 +270,14 @@ class GraphContainer extends React.Component {
       </div>
       <div className="container notification has-background-white-bis">
         <Graph
-          data={this.state.graph}
-          chartRef={this.getChartRef}
+          data = {this.state.graph}
+          chartRef = {this.getChartRef}
         />
+      </div>
+      <div className="container notification has-background-white-bis">
+          <Map
+            coordinates = {this.state.coordinates}
+          />
       </div>
       </div>);
     }
@@ -260,7 +288,14 @@ class GraphContainer extends React.Component {
  * Component that holds our graph object. 
  */
 class Graph extends React.Component {
+  // Flag to check whether the parent is grabbing values,
+  // if it isn't we don't update
+  shouldComponentUpdate = (nextProps) => {
+    return this.props.data !== nextProps.data;
+  }
+
   render = () => {
+    console.log("Rerendering graph");
     return (<div>
       <Scatter 
         data={this.props.data}
@@ -268,6 +303,65 @@ class Graph extends React.Component {
         ref={ref => this.props.chartRef(ref)}
       />
     </div>);
+  }
+}
+
+/**
+ * Component that holds our Google map.
+ */
+class Map extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      map: null,
+      loaded: false
+    };
+  }
+
+  // Flag so that component doesn't update if we're 
+  // currently updating the parent
+  shouldComponentUpdate = (nextProps) => {
+    return this.props.coordinates !== nextProps.coordinates;
+  }
+
+  initMap = () => {
+    let map = new window.google.maps.Map(document.getElementById('map'), {
+      center: {lat: 49.267941, lng: -123.247360},
+      zoom: 12
+    });
+    this.setState({
+      map: map,
+      loaded: true
+    });
+  }
+
+  drawLineOnMap = () => {
+    this.state.map.panTo(new window.google.maps.LatLng(this.props.coordinates[0].lat, this.props.coordinates[0].lng));
+    new window.google.maps.Polyline({
+      path: this.props.coordinates, // This is just an array of coordinates
+      map: this.state.map
+    });
+  }
+  
+  // Load the Google map script when this component mounts
+  componentWillMount = () => {
+    window.initMap = this.initMap;
+    let tag = document.createElement("script");
+    tag.async = true;
+    // Loads only from specific endpoints, safe to commit
+    tag.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyCwcnq2MMCPKEY3hQigIBJn70buQH9py3E&callback=initMap";
+    // Append the script
+    document.body.appendChild(tag);
+  }
+
+  render = () => {
+    console.log("Rerendering map");
+    if (this.state.loaded) {
+      this.drawLineOnMap();
+    }
+    return (
+      <div id="map"></div>
+    );
   }
 }
 
