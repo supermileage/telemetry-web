@@ -341,7 +341,9 @@ class Map extends React.Component {
     if (this.props.coordinates.length > 0) {
       console.log("Drawing lines");
       // Center around first element
-      this.state.map.panTo(new window.google.maps.LatLng(this.props.coordinates[0].lat, this.props.coordinates[0].lng));
+      this.state.map.panTo(new window.google.maps.LatLng(
+        this.props.coordinates[Math.floor(this.props.coordinates.length / 2)].lat, 
+        this.props.coordinates[Math.floor(this.props.coordinates.length / 2)].lng));
       // If no line initialized, initialize it 
       if (this.lines === null) {
         // Set the state
@@ -350,8 +352,8 @@ class Map extends React.Component {
                     map: this.state.map
                   });
       } else {
-        this.lines.path = this.props.coordinates;
         this.lines.setMap(this.state.map);
+        this.lines.setPath(this.props.coordinates);
       }
     } else {
       // Clear the map property from the line
