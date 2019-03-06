@@ -1,11 +1,11 @@
 self.__precacheManifest = [
   {
-    "revision": "7fc15d30352c810754cd",
+    "revision": "47916057a3c3fe895dc5",
     "url": "/telemetrics-view/static/css/main.e40848de.chunk.css"
   },
   {
-    "revision": "7fc15d30352c810754cd",
-    "url": "/telemetrics-view/static/js/main.7fc15d30.chunk.js"
+    "revision": "47916057a3c3fe895dc5",
+    "url": "/telemetrics-view/static/js/main.47916057.chunk.js"
   },
   {
     "revision": "ec5354cf454a9026edda",
@@ -20,7 +20,7 @@ self.__precacheManifest = [
     "url": "/telemetrics-view/static/js/2.04b46f03.chunk.js"
   },
   {
-    "revision": "0654907ccd4ad8a6ee7c41672922613c",
+    "revision": "095ecde66a5efec57c7761bbe09ce7e6",
     "url": "/telemetrics-view/index.html"
   }
 ];
