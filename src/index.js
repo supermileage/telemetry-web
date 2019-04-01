@@ -17,7 +17,7 @@ class GraphContainer extends React.Component {
   constructor(props) {
     super(props);
     this.lastCursor = null;
-    this.vals = [];
+    this.vals = [[], []];
     this.chartRef = null;
     this.state = {
       startTime: moment(),
@@ -95,24 +95,26 @@ class GraphContainer extends React.Component {
           if ('entityResults' in e.batch) {
             console.log()
             if (this.lastCursor === null) {
-              this.vals = [];
-            } else {
-              this.vals = this.vals.slice(); // Return a copy
+              this.vals = [[], []];
             }
             e.batch.entityResults.forEach(d => {
               // For a coordinate
               if (mode === 0) {
-                let elem = {};
-                elem.y = parseFloat(d.entity.properties.data.stringValue);
-                elem.x = moment(d.entity.properties.published_at.stringValue);
-                // Check if the last element was greater than 10 minutes ago
-                if (this.vals.length > 0 && elem.x.unix() - moment(this.vals[this.vals.length - 1].x).unix() > 600) {
-                  this.vals.push({
-                    y: NaN,
-                    x: elem.x
-                  });
+                let retVals = d.entity.properties.data.stringValue.split(" ");
+                for (let i = 0; i < 2; i++) {
+                  let elem = {};
+                  elem.y = parseFloat(retVals[i]);
+                  elem.x = moment(d.entity.properties.published_at.stringValue);
+                  // Check if the last element was greater than 10 minutes ago
+                  if (this.vals[i].length > 0 && elem.x.unix() 
+                        - moment(this.vals[i][this.vals[i].length - 1].x).unix() > 600) {
+                    this.vals[i].push({
+                      y: NaN,
+                      x: elem.x
+                    });
+                  }
+                  this.vals[i].push(elem);
                 }
-                this.vals.push(elem);
               } else {
                 // Convert to lat/long here
                 // Sample NMEA seq "$GPRMC,033404.000,A,4915.6993,N,12314.9440,W,0.45,107.40,060319,,,A*72", 
@@ -124,12 +126,12 @@ class GraphContainer extends React.Component {
                 let elem = {};
                 elem.lat = lat;
                 elem.lng = lng;
-                this.vals.push(elem);
+                this.vals[0].push(elem);
               }
             });
           } else {
             // Clear our values
-            this.vals = [];
+            this.vals = [[], []];
           }
           if (e.batch.moreResults === "NOT_FINISHED") {
             console.log("Not done");
@@ -155,24 +157,27 @@ class GraphContainer extends React.Component {
       ...this.state.graph.datasets, // Spread operator allows us to copy things
     ];
     // Get velocity
-    if (this.chartRef !== null && this.chartRef.props.data.datasets[0]._meta[0].hidden !== true) {
-      await this.getDataHandler('Velocity', 0);
-      newData[0].data = this.vals;
+    if (this.chartRef !== null && (this.chartRef.props.data.datasets[0]._meta[0].hidden !== true
+          || this.chartRef.props.data.datasets[1]._meta[0].hidden !== true)) {
+      await this.getDataHandler('Temperature', 0);
+      newData[0].data = this.vals[0];
+      newData[1].data = this.vals[1];
     }
+    console.log(this.vals[0]);
+    console.log(this.vals[1]);
     // Get power
-    if (this.chartRef !== null && this.chartRef.props.data.datasets[1]._meta[0].hidden !== true) {
+    if (this.chartRef !== null && this.chartRef.props.data.datasets[2]._meta[0].hidden !== true) {
       await this.getDataHandler('Power', 0);
-      newData[1].data = this.vals;
+      newData[2].data = this.vals[0];
     }
     // Get location
     await this.getDataHandler('Location', 1);
     // Parse location here
-    console.log(this.vals);
     this.setState({
       graph: {
         datasets: newData
       },
-      coordinates: this.vals.slice(),
+      coordinates: this.vals[0].slice(),
       updating: false // done updating
     });
   }

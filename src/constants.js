@@ -5,8 +5,8 @@ export const data = {
         {
             spanGaps: false,
             showLine: true,
-            label: 'Velocity',
-            yAxisID: 'Velocity',
+            label: 'Temperature 1',
+            yAxisID: 'Temperature',
             fill: true,
             lineTension: 0.1,
             backgroundColor: 'rgba(75,192,192,0.4)',
@@ -29,8 +29,32 @@ export const data = {
         {
             spanGaps: false,
             showLine: true,
-            label: 'Power',
-            yAxisID: 'Power',
+            label: 'Temperature 2',
+            yAxisID: 'Temperature',
+            fill: true,
+            lineTension: 0.1,
+            backgroundColor: 'rgba(75,192,192,0.4)',
+            borderColor: 'rgba(75,192,192,1)',
+            borderCapStyle: 'butt',
+            borderDash: [],
+            borderDashOffset: 0.0,
+            borderJoinStyle: 'miter',
+            pointBorderColor: 'rgba(75,192,192,1)',
+            pointBackgroundColor: '#fff',
+            pointBorderWidth: 1,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: 'rgba(75,192,192,1)',
+            pointHoverBorderColor: 'rgba(220,220,220,1)',
+            pointHoverBorderWidth: 2,
+            pointRadius: 1,
+            pointHitRadius: 10,
+            data: [] // Data to update
+        },
+        {
+            spanGaps: false,
+            showLine: true,
+            label: 'State of Charge',
+            yAxisID: 'SOC',
             fill: true,
             lineTension: 0.1,
             backgroundColor: 'rgba(192,86,75,0.4)',
@@ -70,25 +94,25 @@ export const chartOptions = {
         },
       }],
       yAxes: [{
-        id: 'Velocity',
+        id: 'Temperature',
         position: 'left',
         gridLines: {
           display: false,
         },
         scaleLabel: {
           display: true,
-          labelString: 'Velocity'
+          labelString: 'Temperature'
         },
         },
         {
-          id: 'Power',
+          id: 'SOC',
           position: 'right',
           gridLines: {
             display: false,
           },
           scaleLabel: {
             display: true,
-            labelString: 'Power'
+            labelString: 'State of Charge'
           },
         }
     ]
