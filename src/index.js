@@ -160,16 +160,23 @@ class GraphContainer extends React.Component {
     if (this.chartRef !== null && (this.chartRef.props.data.datasets[0]._meta[0].hidden !== true
           || this.chartRef.props.data.datasets[1]._meta[0].hidden !== true)) {
       await this.getDataHandler('Temperature', 0);
-      newData[0].data = this.vals[0];
-      newData[1].data = this.vals[1];
+      newData[0].data = this.vals[0].slice();
+      newData[1].data = this.vals[1].slice();
     }
+    console.log("Temperature values");
     console.log(this.vals[0]);
     console.log(this.vals[1]);
     // Get power
     if (this.chartRef !== null && this.chartRef.props.data.datasets[2]._meta[0].hidden !== true) {
       await this.getDataHandler('Power', 0);
-      newData[2].data = this.vals[0];
+      // Make it a value that's better to understand
+      for (let i = 0; i < this.vals[0].length; i++) {
+        this.vals[0][i].y /= 1000000;
+      }
+      newData[2].data = this.vals[0].slice();
     }
+    console.log("Battery values");
+    console.log(this.vals[0]);
     // Get location
     await this.getDataHandler('Location', 1);
     // Parse location here

@@ -101,7 +101,7 @@ export const chartOptions = {
         },
         scaleLabel: {
           display: true,
-          labelString: 'Temperature'
+          labelString: 'Temperature (C)'
         },
         },
         {
@@ -112,7 +112,7 @@ export const chartOptions = {
           },
           scaleLabel: {
             display: true,
-            labelString: 'State of Charge'
+            labelString: 'State of Charge (%)'
           },
         }
     ]
