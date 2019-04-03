@@ -2,7 +2,7 @@
 
 View the page [here](http://www.supermileage.ca/telemetrics-view/). You'll have to log in with the UBCST Google account for verification.
 
-Note that, at the moment, a Google Cloud instance needs to be spun up to run our Node script to connect Pub/Sub with Datastore. Otherwise data won't update.
+The data is sent to a Pub/Sub listener, which has a cloud function subscribed to it that will push that data to the cloudstore. 
 
 # Build Instructions
 
