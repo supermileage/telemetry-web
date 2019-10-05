@@ -1,6 +1,6 @@
-# Telemetrics
+# Telemetry
 
-View the page [here](http://www.supermileage.ca/telemetrics-view/). You'll have to log in with the UBCST Google account for verification.
+View the page [here](http://www.supermileage.ca/telemetry-web/). You'll have to log in with the UBCST Google account for verification.
 
 The data is sent to a Pub/Sub listener, which has a cloud function subscribed to it that will push that data to the cloudstore. 
 

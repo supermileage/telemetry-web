@@ -2,7 +2,7 @@
   "name": "test",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://supermileage.ca/telemetrics-view",
+  "homepage": "http://supermileage.ca/telemetry-web",
   "dependencies": {
     "bulma": "^0.7.4",
     "chart.js": "^2.7.3",
