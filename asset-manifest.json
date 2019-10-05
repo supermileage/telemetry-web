@@ -1,15 +1,24 @@
 {
-  "main.css": "/telemetrics-view/static/css/main.e40848de.chunk.css",
-  "main.js": "/telemetrics-view/static/js/main.7f2ee9f2.chunk.js",
-  "main.js.map": "/telemetrics-view/static/js/main.7f2ee9f2.chunk.js.map",
-  "runtime~main.js": "/telemetrics-view/static/js/runtime~main.ec5354cf.js",
-  "runtime~main.js.map": "/telemetrics-view/static/js/runtime~main.ec5354cf.js.map",
-  "static/css/2.e729780a.chunk.css": "/telemetrics-view/static/css/2.e729780a.chunk.css",
-  "static/js/2.04b46f03.chunk.js": "/telemetrics-view/static/js/2.04b46f03.chunk.js",
-  "static/js/2.04b46f03.chunk.js.map": "/telemetrics-view/static/js/2.04b46f03.chunk.js.map",
-  "index.html": "/telemetrics-view/index.html",
-  "precache-manifest.68272747bea38a620bb217b7fd132624.js": "/telemetrics-view/precache-manifest.68272747bea38a620bb217b7fd132624.js",
-  "service-worker.js": "/telemetrics-view/service-worker.js",
-  "static/css/2.e729780a.chunk.css.map": "/telemetrics-view/static/css/2.e729780a.chunk.css.map",
-  "static/css/main.e40848de.chunk.css.map": "/telemetrics-view/static/css/main.e40848de.chunk.css.map"
+  "files": {
+    "main.css": "/telemetry-web/static/css/main.d472949c.chunk.css",
+    "main.js": "/telemetry-web/static/js/main.fcfcd2f6.chunk.js",
+    "main.js.map": "/telemetry-web/static/js/main.fcfcd2f6.chunk.js.map",
+    "runtime-main.js": "/telemetry-web/static/js/runtime-main.7aff324d.js",
+    "runtime-main.js.map": "/telemetry-web/static/js/runtime-main.7aff324d.js.map",
+    "static/css/2.27ec8ed5.chunk.css": "/telemetry-web/static/css/2.27ec8ed5.chunk.css",
+    "static/js/2.4934ae7d.chunk.js": "/telemetry-web/static/js/2.4934ae7d.chunk.js",
+    "static/js/2.4934ae7d.chunk.js.map": "/telemetry-web/static/js/2.4934ae7d.chunk.js.map",
+    "index.html": "/telemetry-web/index.html",
+    "precache-manifest.b3a1046cf2814bf6c375411f9d9c8d2a.js": "/telemetry-web/precache-manifest.b3a1046cf2814bf6c375411f9d9c8d2a.js",
+    "service-worker.js": "/telemetry-web/service-worker.js",
+    "static/css/2.27ec8ed5.chunk.css.map": "/telemetry-web/static/css/2.27ec8ed5.chunk.css.map",
+    "static/css/main.d472949c.chunk.css.map": "/telemetry-web/static/css/main.d472949c.chunk.css.map"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.7aff324d.js",
+    "static/css/2.27ec8ed5.chunk.css",
+    "static/js/2.4934ae7d.chunk.js",
+    "static/css/main.d472949c.chunk.css",
+    "static/js/main.fcfcd2f6.chunk.js"
+  ]
 }
