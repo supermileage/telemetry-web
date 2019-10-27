@@ -63,6 +63,7 @@ export default class App extends React.Component {
         <div className="login">
           <GoogleLogin
             clientId={config.oauth.clientId}
+            scope="profile email https://www.googleapis.com/auth/datastore"
             buttonText="Login"
             onSuccess={this.oauthSuccess}
             onFailure={this.oauthFailure}

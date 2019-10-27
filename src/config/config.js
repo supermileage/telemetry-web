@@ -8,7 +8,7 @@ let config = {
       return (
         "https://datastore.googleapis.com/v1/projects/" +
         this.projectId +
-        ":runQuery?prettyPrint=true&alt=json"
+        ":runQuery?alt=json"
       );
     },
     generatePayload: (token, body) => {
