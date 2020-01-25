@@ -1,7 +1,7 @@
 import React from "react";
 import moment from "moment";
 import { DatetimePickerTrigger } from "rc-datetime-picker";
-import '../css/datetime.css';
+import "../css/datetime.css";
 
 export default class DayRange extends React.Component {
   // Render my pickers; all the state is lifted up into
@@ -16,7 +16,7 @@ export default class DayRange extends React.Component {
       <div className="columns">
         <div className="column">
           <DatetimePickerTrigger
-            className="input is-rounded is-small"
+            className="input"
             shortcuts={shortcuts}
             moment={this.props.startTime}
             onChange={this.props.onChangeStart}
@@ -30,7 +30,7 @@ export default class DayRange extends React.Component {
         </div>
         <div className="column">
           <DatetimePickerTrigger
-            className="input is-rounded is-small"
+            className="input"
             shortcuts={shortcuts}
             moment={this.props.endTime}
             onChange={this.props.onChangeEnd}
@@ -50,5 +50,5 @@ export default class DayRange extends React.Component {
         </div>
       </div>
     );
-  }
+  };
 }

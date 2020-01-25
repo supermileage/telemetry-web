@@ -15,7 +15,8 @@ export default class Container extends React.Component {
       endTime: moment(),
       liveMode: false,
       updating: false,
-      data: {}
+      data: {},
+      car: "Urban"
     };
   }
 
@@ -99,7 +100,7 @@ export default class Container extends React.Component {
   getData = async () => {
     let newData = {};
 
-    for (let dataset of config.datastore.datasets) {
+    for (let dataset of config.datastore.datasets[this.state.car]) {
       let data = await this.getDataHandler(
         null,
         [],
@@ -125,6 +126,29 @@ export default class Container extends React.Component {
     });
   };
 
+  changeCar = e => {
+    this.setState({
+      car: e.target.id
+    });
+  };
+
+  populateCars = () => {
+    let ret = [];
+    for (let car in config.datastore.datasets) {
+      ret.push(
+        <a
+          className="dropdown-item"
+          id={car}
+          key={car}
+          onClick={this.changeCar}
+        >
+          {car}
+        </a>
+      );
+    }
+    return ret;
+  };
+
   render = () => {
     return (
       <div>
@@ -139,7 +163,7 @@ export default class Container extends React.Component {
               />
             </div>
             <div className="column">
-              <div className="columns is-mobile">
+              <div className="columns is-mobile is-vcentered is-multiline">
                 <div className="toggle column is-narrow">
                   <Toggle
                     defaultChecked={this.state.liveMode}
@@ -153,20 +177,38 @@ export default class Container extends React.Component {
                     updating={this.state.updating}
                   />
                 </div>
+                <div className="column is-narrow">
+                  <div className="dropdown is-small is-hoverable">
+                    <div className="dropdown-trigger">
+                      <button className="button" controls="dropdown-menu">
+                        <span>{this.state.car}</span>
+                        <span className="icon is-small">
+                          <i className="fas fa-angle-down"></i>
+                        </span>
+                      </button>
+                    </div>
+                    <div
+                      className="dropdown-menu"
+                      id="dropdown-menu"
+                      role="menu"
+                    >
+                      <div className="dropdown-content">
+                        {this.populateCars()}
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
-        {config.datastore.datasets.map((dataset, index) => {
-          return (
-            <div
-              className="container notification has-background-white-bis"
-              key={index}
-            >
-              {dataset.element(this.state.data[dataset.id])}
-            </div>
-          );
-        })}
+        <div className="container notification">
+          <div className="columns is-desktop is-multiline">
+            {config.datastore.datasets[this.state.car].map((dataset, index) => {
+              return dataset.element(this.state.data[dataset.id]);
+            })}
+          </div>
+        </div>
       </div>
     );
   };

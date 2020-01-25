@@ -4,7 +4,7 @@ export default class Button extends React.Component {
   render = () => {
     return this.props.liveMode || this.props.updating ? (
       <button
-        className="button is-rounded is-info is-small is-loading"
+        className="button is-info is-loading"
         onClick={this.props.getDataHandler}
         disabled
       >
@@ -12,7 +12,7 @@ export default class Button extends React.Component {
       </button>
     ) : (
       <button
-        className="button is-rounded is-info is-small"
+        className="button is-info"
         onClick={this.props.getDataHandler}
       >
         Update
