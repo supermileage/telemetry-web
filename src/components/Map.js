@@ -28,7 +28,7 @@ export default class Map extends React.Component {
   drawLineOnMap = () => {
     // If there were valid coordinates, do stuff
     if (this.props.data && this.props.data.length > 0) {
-      // Center around first element
+      // Center around middle element
       this.state.map.panTo(
         new window.google.maps.LatLng(
           this.props.data[Math.floor(this.props.data.length / 2)].lat,
@@ -54,8 +54,28 @@ export default class Map extends React.Component {
     }
   };
 
+  drawMarkersOnMap = () => {
+    if (this.props.data && this.props.data.length > 0) {
+      this.props.data.map(position => {
+        let marker = new window.google.maps.Marker({
+          position: position,
+          map: this.state.map
+        });
+        let info = new window.google.maps.InfoWindow({
+          content: new Date(position.timestamp).toLocaleTimeString()
+        });
+        marker.addListener("mouseover", () => {
+          info.open(this.state.map, marker);
+        });
+        marker.addListener("mouseout", function() {
+          info.close();
+        })
+      })
+    }
+  }
+
   // Load the Google map script when this component mounts
-  componentWillMount = () => {
+  componentDidMount = () => {
     window.initMap = this.initMap;
     let tag = document.createElement("script");
     tag.async = true;
@@ -67,11 +87,13 @@ export default class Map extends React.Component {
 
   componentWillUnmount = () => {
     document.querySelector(`[src="${config.map.getSrcUrl()}"`).remove();
+    window.google.maps = undefined;
   };
 
   render = () => {
     if (this.state.loaded) {
       this.drawLineOnMap();
+      this.drawMarkersOnMap();
     }
     return <div id="map"></div>;
   };

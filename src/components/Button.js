@@ -11,10 +11,7 @@ export default class Button extends React.Component {
         Update
       </button>
     ) : (
-      <button
-        className="button is-info"
-        onClick={this.props.getDataHandler}
-      >
+      <button className="button is-info" onClick={this.props.getDataHandler}>
         Update
       </button>
     );
