@@ -3,7 +3,7 @@ body {
   min-height: 100vh;
 }
 
-.container.notification {
+.container.control {
   background-color: #ffffff;
   border: 1px solid hsl(0, 0%, 87%);
 }

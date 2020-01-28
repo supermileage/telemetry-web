@@ -2,7 +2,7 @@
  * https://github.com/YouCanBookMe/react-datetime
  */
 
- .rdt {
+.rdt {
   position: relative;
 }
 .rdtPicker {
@@ -24,9 +24,9 @@
   position: static;
 }
 
-/* .rdtPicker .rdtTimeToggle {
-  text-align: center;
-} */
+.rdtPicker .rdtTimeToggle {
+  text-align: center !important;
+}
 
 .rdtPicker table {
   width: 100%;
@@ -34,7 +34,7 @@
 }
 .rdtPicker td,
 .rdtPicker th {
-  text-align: center;
+  text-align: center !important;
   height: 28px;
 }
 .rdtPicker td {

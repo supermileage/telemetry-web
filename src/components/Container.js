@@ -171,7 +171,7 @@ export default class Container extends React.Component {
   render = () => {
     return (
       <div>
-        <div className="container notification">
+        <div className="container notification control">
           <div className="columns">
             <div className="column is-narrow">
               <DayRange
