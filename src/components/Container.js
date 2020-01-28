@@ -23,7 +23,9 @@ export default class Container extends React.Component {
   componentDidMount = () => {
     document.addEventListener("click", e => {
       if (!e.target.matches(".dropdown-trigger *")) {
-        this.setDropdownState(false);
+        if (this.state.dropdownOpen) {
+          this.setDropdownState(false);
+        }
       }
     });
   };
@@ -141,9 +143,12 @@ export default class Container extends React.Component {
   };
 
   changeCar = e => {
-    this.setState({
-      car: e.target.id
-    });
+    if (e.target.id !== this.state.car) {
+      this.setState({
+      car: e.target.id,
+        data: {}
+      });
+    }
   };
 
   populateCars = () => {
@@ -226,7 +231,7 @@ export default class Container extends React.Component {
             </div>
           </div>
         </div>
-        <div className="container notification">
+        <div className="container">
           <div className="columns is-desktop is-multiline">
             {config.datastore.datasets[this.state.car].map((dataset, index) => {
               return dataset.element(this.state.data[dataset.id]);
