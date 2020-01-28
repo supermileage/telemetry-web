@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "04b0cc6f346dfe45233a9b6b9b066e8e",
+    "revision": "12532def9e593d6e3729fd1c9c747f4c",
     "url": "/telemetry-web/index.html"
   },
   {
@@ -8,8 +8,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/telemetry-web/static/css/2.56a6073e.chunk.css"
   },
   {
-    "revision": "0376708e8fa8a9c31c0f",
-    "url": "/telemetry-web/static/css/main.389d5154.chunk.css"
+    "revision": "8a6bc2d7d0e39e3ee0e0",
+    "url": "/telemetry-web/static/css/main.a4180622.chunk.css"
   },
   {
     "revision": "1ac43442a0876384099c",
@@ -20,7 +20,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/telemetry-web/static/js/2.f2d0f07a.chunk.js.LICENSE"
   },
   {
-    "revision": "0376708e8fa8a9c31c0f",
+    "revision": "8a6bc2d7d0e39e3ee0e0",
     "url": "/telemetry-web/static/js/main.f067915f.chunk.js"
   },
   {
