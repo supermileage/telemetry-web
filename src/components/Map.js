@@ -56,7 +56,7 @@ export default class Map extends React.Component {
 
   drawMarkersOnMap = () => {
     if (this.props.data && this.props.data.length > 0) {
-      this.props.data.map(position => {
+      this.props.data.forEach(position => {
         let marker = new window.google.maps.Marker({
           position: position,
           map: this.state.map
@@ -69,7 +69,7 @@ export default class Map extends React.Component {
         });
         marker.addListener("mouseout", function() {
           info.close();
-        })
+        });
       })
     }
   }

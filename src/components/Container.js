@@ -1,8 +1,7 @@
 import React from "react";
-import Toggle from "react-toggle";
+import Toggle from "./Toggle.js";
 import Button from "./Button.js";
 import moment from "moment";
-import "../css/toggle.css";
 import config from "../config/config.js";
 import { queryBuilder } from "../helpers/builders.js";
 import DayRange from "./DayRange.js";
@@ -186,17 +185,10 @@ export default class Container extends React.Component {
                   />
                 </div>
                 <div className="column is-narrow">
-                  <Button
-                    liveMode={this.state.liveMode}
-                    getDataHandler={this.updateMetrics}
-                    updating={this.state.updating}
-                  />
-                </div>
-                <div className="column is-narrow">
                   <div
                     className={
-                      "dropdown is-small " +
-                      (this.state.dropdownOpen ? "is-active" : "")
+                      "dropdown" +
+                      (this.state.dropdownOpen ? " is-active" : "")
                     }
                   >
                     <div
@@ -222,6 +214,13 @@ export default class Container extends React.Component {
                       </div>
                     </div>
                   </div>
+                </div>
+                <div className="column is-narrow">
+                  <Button
+                    liveMode={this.state.liveMode}
+                    getDataHandler={this.updateMetrics}
+                    updating={this.state.updating}
+                  />
                 </div>
               </div>
             </div>
