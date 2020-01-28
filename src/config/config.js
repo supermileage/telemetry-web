@@ -34,7 +34,8 @@ let config = {
       center: { lat: 49.267941, lng: -123.24736 },
       zoom: 12
     }
-  }
+  },
+  refreshInterval: 8000
 };
 
 export default config;

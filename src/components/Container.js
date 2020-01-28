@@ -70,7 +70,7 @@ export default class Container extends React.Component {
   intervalHandler = async () => {
     await this.updateMetrics();
     if (this.state.liveMode) {
-      this.timeout = setTimeout(this.intervalHandler, 2000);
+      this.timeout = setTimeout(this.intervalHandler, config.refreshInterval);
     }
   };
 

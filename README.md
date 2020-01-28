@@ -25,4 +25,4 @@ Each dataset from the datastore takes the following properties:
 
 ## Cloud Resources
 
-In addition to setting up the resources as required by the gcp-deployment-script, we'll need to manually set up our OAuth consent screen (for a clientId), and the Maps JavaScript API (make a key and restrict it to only be able to call from specific referrers for the Maps API specifically).
+In addition to setting up the resources as required by the gcp-deployment-script, we'll need to manually set up our OAuth consent screen (for a clientId), and also input the projectId within `config/config.js`.
