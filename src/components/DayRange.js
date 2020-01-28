@@ -7,7 +7,6 @@ export default class DayRange extends React.Component {
   // the parent element, thus all the changes are handled
   // by props; this element does not have state
   render = () => {
-    console.log("Rerender");
     return (
       <div className="columns">
         <div className="column">
