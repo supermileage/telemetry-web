@@ -1,14 +1,17 @@
 import React from "react";
 import config from "../config/config.js";
 
+import "ol/ol.css";
 import * as ol from "ol";
 import * as layer from "ol/layer";
 import * as proj from "ol/proj";
 import * as geom from "ol/geom";
 import * as style from "ol/style";
 import * as source from "ol/source";
+import * as control from "ol/control";
+
 /**
- * Component that holds our Google map.
+ * Component that holds our map.
  */
 export default class MapContainer extends React.Component {
   constructor(props) {
@@ -42,8 +45,13 @@ export default class MapContainer extends React.Component {
           source: new source.OSM()
         })
       ],
+      controls: control.defaults().extend([
+        new control.FullScreen(),
+        new control.ScaleLine()
+      ]),
       target: "map"
     });
+
     this.setState({
       map: map,
       loaded: true
