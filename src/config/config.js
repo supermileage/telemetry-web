@@ -29,15 +29,6 @@ let config = {
       "929098184548-qq0n3oj40b7s2qbk8nmjm9cn5c6bs15l.apps.googleusercontent.com"
   },
   map: {
-    // Non-secret, so we can commit this
-    apiKey: "AIzaSyC5l2tTNWl1b3vliRAbpWD_r3jZXrV85kA",
-    getSrcUrl: function() {
-      return (
-        "https://maps.googleapis.com/maps/api/js?key=" +
-        this.apiKey +
-        "&callback=initMap"
-      );
-    },
     defaults: {
       // Vancouver
       center: { lat: 49.267941, lng: -123.24736 },

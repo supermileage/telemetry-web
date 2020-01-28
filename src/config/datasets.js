@@ -2,7 +2,7 @@ import moment from "moment";
 import { chartBuilder } from "../helpers/builders.js";
 import React from "react";
 import Graph from "../components/Graph.js";
-import Map from "../components/Map.js";
+import MapContainer from "../components/MapContainer.js";
 
 let datasets = {
   Urban: [
@@ -33,7 +33,9 @@ let datasets = {
       element: function(data) {
         return (
           <div className="column is-half-desktop" key={this.id}>
-            <Graph data={data || {}} options={this.options} />
+            <div className="box">
+              <Graph data={data || {}} options={this.options} />
+            </div>
           </div>
         );
       },
@@ -97,7 +99,9 @@ let datasets = {
       element: function(data) {
         return (
           <div className="column is-half-desktop" key={this.id}>
-            <Graph data={data || {}} options={this.options} />
+            <div className="box">
+              <Graph data={data || {}} options={this.options} />
+            </div>
           </div>
         );
       },
@@ -157,7 +161,9 @@ let datasets = {
       element: function(data) {
         return (
           <div className="column is-full" key={this.id}>
-            <Map data={data || []} />
+            <div className="card">
+              <MapContainer data={data || []} />
+            </div>
           </div>
         );
       }
@@ -171,8 +177,7 @@ let datasets = {
         let data = d.entity.properties.data.stringValue.split(",");
         
         let elem = {};
-        // elem.y = parseFloat(data[data.indexOf("K") - 1]);
-        elem.y = parseFloat(d.entity.properties.data.stringValue);
+        elem.y = parseFloat(data[data.indexOf("K") - 1]);
         elem.x = moment(d.entity.properties.recorded_at.stringValue);
 
         // Check if the last element was greater than 10 minutes ago, we disjoint it then
@@ -193,7 +198,9 @@ let datasets = {
       element: function(data) {
         return (
           <div className="column" key={this.id}>
-            <Graph data={data || {}} options={this.options} />
+            <div className="box">
+              <Graph data={data || {}} options={this.options} />
+            </div>
           </div>
         );
       },
@@ -254,7 +261,9 @@ let datasets = {
       element: function(data) {
         return (
           <div className="column is-full" key={this.id}>
-            <Map data={data || []} />
+            <div className="card">
+              <MapContainer data={data || []} />
+            </div>
           </div>
         );
       }
