@@ -1,5 +1,6 @@
 import React from "react";
 import config from "../config/config.js";
+import moment from "moment";
 
 import "ol/ol.css";
 import * as ol from "ol";
@@ -45,17 +46,16 @@ export default class MapContainer extends React.Component {
           source: new source.OSM()
         })
       ],
-      controls: control.defaults().extend([
-        new control.FullScreen(),
-        new control.ScaleLine()
-      ]),
+      controls: control
+        .defaults()
+        .extend([new control.FullScreen(), new control.ScaleLine()]),
       target: "map"
     });
 
     this.setState({
       map: map,
       loaded: true
-    });
+    }, this.bootstrapOverlay);
   };
 
   shouldComponentUpdate = (nextProps, nextState) => {
@@ -81,6 +81,37 @@ export default class MapContainer extends React.Component {
     });
   };
 
+  bootstrapOverlay = () => {
+    this.features.overlay = new ol.Overlay({
+      element: document.getElementById("popup"),
+      autoPan: true,
+      autoPanAnimation: {
+        duration: 250
+      }
+    });
+    this.state.map.addOverlay(this.features.overlay);
+
+    this.state.map.on("pointermove", e => {
+      if (this.state.map.hasFeatureAtPixel(e.pixel) === true) {
+        let features = this.state.map.getFeaturesAtPixel(e.pixel);
+        if (features.length < 5) {
+          features.forEach(feature => {
+            if (feature.get("name") === "point") {
+              document.getElementById(
+                "popup-content"
+              ).innerHTML = `<b>${moment(feature.get("timestamp")).format(
+                "HH:mm:ss A"
+              )}</b>`;
+              this.features.overlay.setPosition(e.coordinate);
+            }
+          });
+        }
+      } else {
+        this.features.overlay.setPosition(undefined);
+      }
+    });
+  };
+
   centerMap = () => {
     if (this.props.data && this.props.data.length > 0) {
       this.state.map
@@ -89,7 +120,7 @@ export default class MapContainer extends React.Component {
           this.formatCoordinate(this.props.data[this.props.data.length - 1])
         );
     }
-  }
+  };
 
   drawLineOnMap = () => {
     if (this.props.data && this.props.data.length > 0) {
@@ -119,17 +150,26 @@ export default class MapContainer extends React.Component {
 
   drawMarkersOnMap = () => {
     if (this.props.data && this.props.data.length > 0) {
-      let feature = new ol.Feature({
-        geometry: new geom.MultiPoint(
-          this.props.data.map(e => this.formatCoordinate(e))
-        ),
-        name: "markers"
+      if (this.features.markers) {
+        this.clearFeature("markers");
+      }
+      let features = [];
+      this.props.data.forEach(e => {
+        features.push(
+          new ol.Feature({
+            geometry: new geom.Point(this.formatCoordinate(e)),
+            name: "point",
+            timestamp: e.timestamp
+          })
+        );
       });
+
       this.features.markers = new layer.Vector({
         source: new source.Vector({
-          features: [feature]
+          features
         })
       });
+
       this.state.map.addLayer(this.features.markers);
     } else {
       this.clearFeature("markers");
@@ -142,6 +182,12 @@ export default class MapContainer extends React.Component {
       this.drawMarkersOnMap();
       this.centerMap();
     }
-    return <div id="map"></div>;
+    return (
+      <div id="map">
+        <div id="popup">
+          <div id="popup-content"></div>
+        </div>
+      </div>
+    );
   };
 }

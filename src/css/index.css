@@ -39,3 +39,9 @@ input:disabled {
 #map {
   height: 500px;
 }
+
+#popup {
+  background-color: white;
+  border: 1px solid white;
+  border-radius: 8px;
+}
