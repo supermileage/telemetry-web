@@ -40,7 +40,7 @@ export const queryBuilder = (liveMode, startTime, endTime, id) => {
                   propertyFilter: {
                     op: "GREATER_THAN_OR_EQUAL",
                     property: {
-                      name: "published_at"
+                      name: "recorded_at"
                     },
                     value: {
                       stringValue: startTime.toISOString()
@@ -75,7 +75,7 @@ export const queryBuilder = (liveMode, startTime, endTime, id) => {
             },
             {
               property: {
-                name: "published_at"
+                name: "recorded_at"
               }
             }
           ]
@@ -90,7 +90,7 @@ export const queryBuilder = (liveMode, startTime, endTime, id) => {
                   propertyFilter: {
                     op: "GREATER_THAN_OR_EQUAL",
                     property: {
-                      name: "published_at"
+                      name: "recorded_at"
                     },
                     value: {
                       stringValue: startTime.toISOString()
@@ -101,7 +101,7 @@ export const queryBuilder = (liveMode, startTime, endTime, id) => {
                   propertyFilter: {
                     op: "LESS_THAN_OR_EQUAL",
                     property: {
-                      name: "published_at"
+                      name: "recorded_at"
                     },
                     value: {
                       stringValue: endTime.toISOString()
@@ -136,7 +136,7 @@ export const queryBuilder = (liveMode, startTime, endTime, id) => {
             },
             {
               property: {
-                name: "published_at"
+                name: "recorded_at"
               }
             }
           ]

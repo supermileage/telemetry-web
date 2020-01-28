@@ -13,7 +13,7 @@ let datasets = {
         let retVals = d.entity.properties.data.stringValue.split(" ");
         let elem = {};
         elem.y = parseFloat(retVals[0]);
-        elem.x = moment(d.entity.properties.published_at.stringValue);
+        elem.x = moment(d.entity.properties.recorded_at.stringValue);
 
         // Check if the last element was greater than 10 minutes ago, we disjoint it then
         if (
@@ -77,7 +77,7 @@ let datasets = {
       handler: function(retval, d) {
         let elem = {};
         elem.y = parseFloat(d.entity.properties.data.stringValue);
-        elem.x = moment(d.entity.properties.published_at.stringValue);
+        elem.x = moment(d.entity.properties.recorded_at.stringValue);
 
         // Check if the last element was greater than 10 minutes ago, we disjoint it then
         if (
@@ -171,8 +171,9 @@ let datasets = {
         let data = d.entity.properties.data.stringValue.split(",");
         
         let elem = {};
-        elem.y = parseFloat(data[data.indexOf("K") - 1]);
-        elem.x = moment(d.entity.properties.published_at.stringValue);
+        // elem.y = parseFloat(data[data.indexOf("K") - 1]);
+        elem.y = parseFloat(d.entity.properties.data.stringValue);
+        elem.x = moment(d.entity.properties.recorded_at.stringValue);
 
         // Check if the last element was greater than 10 minutes ago, we disjoint it then
         if (
@@ -243,7 +244,7 @@ let datasets = {
           parseFloat(parseFloat(NMEASeq[5]) % 100) / 60;
         lat = NMEASeq[4] === "S" ? -lat : lat;
         lng = NMEASeq[6] === "W" ? -lng : lng;
-        let timestamp = d.entity.properties.published_at.stringValue;
+        let timestamp = d.entity.properties.recorded_at.stringValue;
         let elem = { lat, lng, timestamp };
         retval.push(elem);
       },

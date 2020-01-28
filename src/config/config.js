@@ -3,7 +3,7 @@ import datasets from "./datasets.js";
 let config = {
   datastore: {
     // https://cloud.google.com/datastore/docs/reference/data/rest/v1/projects/runQuery
-    projectId: "telemetry-urban-sm",
+    projectId: "supermileage-telemetry-266511",
     getQueryUrl: function() {
       return (
         "https://datastore.googleapis.com/v1/projects/" +
@@ -26,7 +26,7 @@ let config = {
   },
   oauth: {
     clientId:
-      "361835365952-be92snngmdj4q3p52bs05u31qd8vq4gb.apps.googleusercontent.com"
+      "929098184548-qq0n3oj40b7s2qbk8nmjm9cn5c6bs15l.apps.googleusercontent.com"
   },
   map: {
     // Non-secret, so we can commit this
