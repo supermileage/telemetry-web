@@ -15,10 +15,25 @@ export default class Container extends React.Component {
       endTime: moment(),
       liveMode: false,
       updating: false,
+      dropdownOpen: false,
       data: {},
       car: "Urban"
     };
   }
+
+  componentDidMount = () => {
+    document.addEventListener("click", e => {
+      if (!e.target.matches(".dropdown-trigger *")) {
+        this.setDropdownState(false);
+      }
+    });
+  };
+
+  setDropdownState = dropState => {
+    this.setState({
+      dropdownOpen: dropState
+    });
+  };
 
   // Handler functions for our starttime change, which
   // our dayrange will receieve as a prop
@@ -178,8 +193,18 @@ export default class Container extends React.Component {
                   />
                 </div>
                 <div className="column is-narrow">
-                  <div className="dropdown is-small is-hoverable">
-                    <div className="dropdown-trigger">
+                  <div
+                    className={
+                      "dropdown is-small " +
+                      (this.state.dropdownOpen ? "is-active" : "")
+                    }
+                  >
+                    <div
+                      className="dropdown-trigger"
+                      onClick={() => {
+                        this.setDropdownState(!this.state.dropdownOpen);
+                      }}
+                    >
                       <button className="button" controls="dropdown-menu">
                         <span>{this.state.car}</span>
                         <span className="icon is-small">
