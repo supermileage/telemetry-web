@@ -1,5 +1,12 @@
 body {
+  background-color: hsl(0, 0%, 96%);
+  min-height: 100vh;
   margin: 20px;
+}
+
+.container.notification {
+  background-color: #ffffff;
+  border: 1px solid hsl(0, 0%, 87%);
 }
 
 /* Delegate input styling to Bulma */
