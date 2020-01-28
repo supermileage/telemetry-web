@@ -1,25 +1,25 @@
 {
   "files": {
-    "main.css": "/telemetry-web/static/css/main.5e426cb5.chunk.css",
-    "main.js": "/telemetry-web/static/js/main.f2083dc6.chunk.js",
-    "main.js.map": "/telemetry-web/static/js/main.f2083dc6.chunk.js.map",
+    "main.css": "/telemetry-web/static/css/main.54a241ad.chunk.css",
+    "main.js": "/telemetry-web/static/js/main.f067915f.chunk.js",
+    "main.js.map": "/telemetry-web/static/js/main.f067915f.chunk.js.map",
     "runtime-main.js": "/telemetry-web/static/js/runtime-main.2252eb33.js",
     "runtime-main.js.map": "/telemetry-web/static/js/runtime-main.2252eb33.js.map",
     "static/css/2.56a6073e.chunk.css": "/telemetry-web/static/css/2.56a6073e.chunk.css",
     "static/js/2.f2d0f07a.chunk.js": "/telemetry-web/static/js/2.f2d0f07a.chunk.js",
     "static/js/2.f2d0f07a.chunk.js.map": "/telemetry-web/static/js/2.f2d0f07a.chunk.js.map",
     "index.html": "/telemetry-web/index.html",
-    "precache-manifest.7fbc8119680e9cf9409c5d1e81322a81.js": "/telemetry-web/precache-manifest.7fbc8119680e9cf9409c5d1e81322a81.js",
+    "precache-manifest.377fe02a3f91095e021787a3d138010f.js": "/telemetry-web/precache-manifest.377fe02a3f91095e021787a3d138010f.js",
     "service-worker.js": "/telemetry-web/service-worker.js",
     "static/css/2.56a6073e.chunk.css.map": "/telemetry-web/static/css/2.56a6073e.chunk.css.map",
-    "static/css/main.5e426cb5.chunk.css.map": "/telemetry-web/static/css/main.5e426cb5.chunk.css.map",
+    "static/css/main.54a241ad.chunk.css.map": "/telemetry-web/static/css/main.54a241ad.chunk.css.map",
     "static/js/2.f2d0f07a.chunk.js.LICENSE": "/telemetry-web/static/js/2.f2d0f07a.chunk.js.LICENSE"
   },
   "entrypoints": [
     "static/js/runtime-main.2252eb33.js",
     "static/css/2.56a6073e.chunk.css",
     "static/js/2.f2d0f07a.chunk.js",
-    "static/css/main.5e426cb5.chunk.css",
-    "static/js/main.f2083dc6.chunk.js"
+    "static/css/main.54a241ad.chunk.css",
+    "static/js/main.f067915f.chunk.js"
   ]
 }
