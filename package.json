@@ -9,6 +9,7 @@
     "bulma-switch": "^2.0.0",
     "chart.js": "^2.7.3",
     "moment": "^2.24.0",
+    "ol": "^6.1.1",
     "react": "^16.8.1",
     "react-chartjs-2": "^2.7.4",
     "react-datetime": "^2.16.3",
