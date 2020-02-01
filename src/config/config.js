@@ -35,7 +35,7 @@ let config = {
       zoom: 12
     }
   },
-  refreshInterval: 8000
+  refreshInterval: 5000
 };
 
 export default config;
