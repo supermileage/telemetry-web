@@ -37,10 +37,12 @@ class MapContainer extends React.Component {
   }
 
   clearFeature = feature => {
-    this.features[feature]
-      .getSource()
-      .getFeatures()
-      .forEach(feat => this.features[feature].getSource().removeFeature(feat));
+    if (this.features[feature]) {
+      this.features[feature]
+        .getSource()
+        .getFeatures()
+        .forEach(feat => this.features[feature].getSource().removeFeature(feat));
+    }
   };
 
   formatCoordinate = coord => {
@@ -77,6 +79,9 @@ class MapContainer extends React.Component {
     if (!this.props.data) {
       return true;
     }
+    if (this.state.loaded !== nextState.loaded) {
+      return true;
+    }
     if (nextProps.data && this.props.data.length === nextProps.data.length) {
       if (JSON.stringify(this.props.data) === JSON.stringify(nextProps.data)) {
         return false;
@@ -89,7 +94,6 @@ class MapContainer extends React.Component {
   };
 
   componentWillUnmount = () => {
-    console.log("will unmount");
     this.features = {};
     this.setState({
       map: null,
@@ -192,10 +196,8 @@ class MapContainer extends React.Component {
 
   render = () => {
     const { classes } = this.props;
-    console.log(this.props.data);
 
     if (this.state.loaded) {
-      console.log("redrawing");
       this.drawLineOnMap();
       this.drawMarkersOnMap();
       this.centerMap();
