@@ -39,7 +39,7 @@ class App extends React.Component {
     const { classes } = this.props;
     return (
       <CssBaseline>
-        {this.state.loggedOn ? (
+        {true ? (
           <AppContainer token={this.state.token} />
         ) : (
           <Container maxWidth="xs" className={classes.root}>

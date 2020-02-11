@@ -1,6 +1,5 @@
 import React, { Fragment } from "react";
 import CustomButton from "./CustomButton.js";
-import Help from "./Help.js";
 import moment from "moment";
 import config from "../config/config.js";
 import { queryBuilder } from "../helpers/builders.js";
@@ -29,9 +28,6 @@ const customStyle = theme => ({
     minWidth: 120
   },
   container: {
-    padding: theme.spacing(2)
-  },
-  paper: {
     padding: theme.spacing(2)
   }
 });
@@ -237,7 +233,7 @@ class AppContainer extends React.Component {
                   container
                   spacing={1}
                   alignItems="center"
-                  justify="center"
+                  justify="flex-start"
                 >
                   <Grid item>
                     <DayRange
@@ -248,8 +244,13 @@ class AppContainer extends React.Component {
                     />
                   </Grid>
                   <Grid item>
-                    <Grid container spacing={1} alignItems="center">
-                      <Grid item xs={12} sm>
+                    <Grid
+                      container
+                      spacing={1}
+                      alignItems="center"
+                      justify="flex-start"
+                    >
+                      <Grid item xs={12} sm="auto">
                         <FormControl>
                           <InputLabel>Car</InputLabel>
                           <Select
@@ -262,21 +263,18 @@ class AppContainer extends React.Component {
                           </Select>
                         </FormControl>
                       </Grid>
-                      <Grid item xs={3} sm>
+                      <Grid item xs="auto" sm="auto">
                         <Switch
                           checked={this.state.liveMode}
                           onChange={this.liveUpdateHandler}
                         />
                       </Grid>
-                      <Grid item xs={5} sm>
+                      <Grid item xs="auto" sm="auto">
                         <CustomButton
                           liveMode={this.state.liveMode}
                           getDataHandler={this.updateMetrics}
                           updating={this.state.updating}
                         />
-                      </Grid>
-                      <Grid item xs={4} sm>
-                        <Help />
                       </Grid>
                     </Grid>
                   </Grid>
@@ -299,7 +297,7 @@ class AppContainer extends React.Component {
                   .map((dataset, index) => {
                     return (
                       <Grid item xs={12} key={index}>
-                        <Paper className={classes.paper}>
+                        <Paper>
                           {dataset.element(this.state.data[dataset.id])}
                         </Paper>
                       </Grid>

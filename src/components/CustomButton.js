@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, withStyles } from "@material-ui/core";
 
-const customStyle = { button: { minWidth: 90 } };
+const customStyle = { button: { width: 80 } };
 
 class CustomButton extends React.Component {
   render = () => {
