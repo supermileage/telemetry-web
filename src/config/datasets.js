@@ -31,13 +31,7 @@ let datasets = {
         return chartBuilder(label, id, data);
       },
       element: function(data) {
-        return (
-          <div className="column is-half-desktop" key={this.id}>
-            <div className="box">
-              <Graph data={data || {}} options={this.options} />
-            </div>
-          </div>
-        );
+        return <Graph key={this.id} data={data || {}} options={this.options} />;
       },
       options: {
         animation: {
@@ -97,13 +91,7 @@ let datasets = {
         return chartBuilder(label, id, data);
       },
       element: function(data) {
-        return (
-          <div className="column is-half-desktop" key={this.id}>
-            <div className="box">
-              <Graph data={data || {}} options={this.options} />
-            </div>
-          </div>
-        );
+        return <Graph key={this.id} data={data || {}} options={this.options} />;
       },
       options: {
         animation: {
@@ -159,13 +147,7 @@ let datasets = {
         return data;
       },
       element: function(data) {
-        return (
-          <div className="column is-full" key={this.id}>
-            <div className="card">
-              <MapContainer data={data || []} />
-            </div>
-          </div>
-        );
+        return <MapContainer key={this.id} data={data || []} />;
       }
     }
   ],
@@ -175,7 +157,7 @@ let datasets = {
       id: "PROTO-Speed",
       handler: function(retval, d) {
         let data = d.entity.properties.data.stringValue.split(",");
-        
+
         let elem = {};
         elem.y = parseFloat(data[data.indexOf("K") - 1]);
         elem.x = moment(d.entity.properties.recorded_at.stringValue);
@@ -196,13 +178,7 @@ let datasets = {
         return chartBuilder(label, id, data);
       },
       element: function(data) {
-        return (
-          <div className="column" key={this.id}>
-            <div className="box">
-              <Graph data={data || {}} options={this.options} />
-            </div>
-          </div>
-        );
+        return <Graph key={this.id} data={data || {}} options={this.options} />;
       },
       options: {
         animation: {
@@ -259,13 +235,7 @@ let datasets = {
         return data;
       },
       element: function(data) {
-        return (
-          <div className="column is-full" key={this.id}>
-            <div className="card">
-              <MapContainer data={data || []} />
-            </div>
-          </div>
-        );
+        return <MapContainer key={this.id} data={data || []} />;
       }
     }
   ]

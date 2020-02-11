@@ -1,5 +1,5 @@
 import { Scatter } from "react-chartjs-2";
-import React from "react";
+import React, { Fragment } from "react";
 
 /**
  * Component that holds our graph object.
@@ -7,9 +7,9 @@ import React from "react";
 export default class Graph extends React.Component {
   render = () => {
     return (
-      <div>
+      <Fragment>
         <Scatter data={this.props.data} options={this.props.options} />
-      </div>
+      </Fragment>
     );
   };
 }

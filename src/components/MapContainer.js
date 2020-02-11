@@ -1,6 +1,7 @@
 import React from "react";
 import config from "../config/config.js";
 import moment from "moment";
+import { withStyles, Box } from "@material-ui/core";
 
 import "ol/ol.css";
 import * as ol from "ol";
@@ -11,10 +12,21 @@ import * as style from "ol/style";
 import * as source from "ol/source";
 import * as control from "ol/control";
 
+const customStyle = {
+  map: {
+    height: "80vh"
+  },
+  popup: {
+    backgroundColor: "white",
+    border: "1px solid white",
+    borderRadius: "8px"
+  }
+};
+
 /**
  * Component that holds our map.
  */
-export default class MapContainer extends React.Component {
+class MapContainer extends React.Component {
   constructor(props) {
     super(props);
     this.features = {};
@@ -52,10 +64,13 @@ export default class MapContainer extends React.Component {
       target: "map"
     });
 
-    this.setState({
-      map: map,
-      loaded: true
-    }, this.bootstrapOverlay);
+    this.setState(
+      {
+        map: map,
+        loaded: true
+      },
+      this.bootstrapOverlay
+    );
   };
 
   shouldComponentUpdate = (nextProps, nextState) => {
@@ -74,6 +89,7 @@ export default class MapContainer extends React.Component {
   };
 
   componentWillUnmount = () => {
+    console.log("will unmount");
     this.features = {};
     this.setState({
       map: null,
@@ -97,11 +113,9 @@ export default class MapContainer extends React.Component {
         if (features.length < 5) {
           features.forEach(feature => {
             if (feature.get("name") === "point") {
-              document.getElementById(
-                "popup-content"
-              ).innerHTML = `<b>${moment(feature.get("timestamp")).format(
-                "HH:mm:ss A"
-              )}</b>`;
+              document.getElementById("popup-content").innerHTML = `<b>${moment(
+                feature.get("timestamp")
+              ).format("HH:mm:ss A")}</b>`;
               this.features.overlay.setPosition(e.coordinate);
             }
           });
@@ -177,17 +191,23 @@ export default class MapContainer extends React.Component {
   };
 
   render = () => {
+    const { classes } = this.props;
+    console.log(this.props.data);
+
     if (this.state.loaded) {
+      console.log("redrawing");
       this.drawLineOnMap();
       this.drawMarkersOnMap();
       this.centerMap();
     }
     return (
-      <div id="map">
-        <div id="popup">
+      <Box id="map" className={classes.map}>
+        <div id="popup" className={classes.popup}>
           <div id="popup-content"></div>
         </div>
-      </div>
+      </Box>
     );
   };
 }
+
+export default withStyles(customStyle)(MapContainer);

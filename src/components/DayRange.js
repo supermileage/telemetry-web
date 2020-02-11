@@ -1,6 +1,7 @@
 import React from "react";
-import "../css/datetime.css";
-import Datetime from "react-datetime";
+import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
+import { Grid } from "@material-ui/core";
+import MomentUtils from "@date-io/moment";
 
 export default class DayRange extends React.Component {
   // Render my pickers; all the state is lifted up into
@@ -8,27 +9,30 @@ export default class DayRange extends React.Component {
   // by props; this element does not have state
   render = () => {
     return (
-      <div className="columns">
-        <div className="column">
-          <Datetime
-            className="input"
-            type="date"
-            onChange={this.props.onChangeStart}
-            value={this.props.startTime}
-          />
-        </div>
-        <div className="column">
-          <Datetime
-            className="input"
-            type="date"
-            onChange={this.props.onChangeEnd}
-            inputProps={{
-              disabled: this.props.endTime === null
-            }}
-            value={this.props.endTime === null ? "Current" : this.props.endTime}
-          />
-        </div>
-      </div>
+      <MuiPickersUtilsProvider utils={MomentUtils}>
+        <Grid container spacing={2} alignItems="center" justify="center">
+          <Grid item xs={12} sm={6}>
+            <DateTimePicker
+              fullWidth
+              label="Start time"
+              format="MMM D, hh:mm a"
+              onChange={this.props.onChangeStart}
+              value={this.props.startTime}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <DateTimePicker
+              fullWidth
+              label="End time"
+              format="MMM D, hh:mm a"
+              onChange={this.props.onChangeEnd}
+              value={this.props.endTime}
+              emptyLabel="current"
+              disabled={this.props.endTime === null}
+            />
+          </Grid>
+        </Grid>
+      </MuiPickersUtilsProvider>
     );
   };
 }
