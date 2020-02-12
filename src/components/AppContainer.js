@@ -136,7 +136,7 @@ class AppContainer extends React.Component {
             dataset.id,
             dataset.handler
           );
-          newData[dataset.id] = dataset.parser(dataset.label, dataset.id, data);
+          newData[dataset.id] = dataset.parser(data);
         }
       }
     }
