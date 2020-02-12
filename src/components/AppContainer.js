@@ -19,9 +19,15 @@ import {
   ExpansionPanel,
   ExpansionPanelSummary,
   ExpansionPanelDetails,
-  Typography
+  Typography,
+  Tooltip,
+  IconButton
 } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import Sizing1Icon from "@material-ui/icons/Filter1";
+import Sizing2Icon from "@material-ui/icons/Filter2";
+import Sizing3Icon from "@material-ui/icons/Filter3";
+import Sizing4Icon from "@material-ui/icons/Filter4";
 
 const customStyle = theme => ({
   select: {
@@ -31,6 +37,13 @@ const customStyle = theme => ({
     padding: theme.spacing(2)
   }
 });
+
+const sizingIcons = {
+  1: <Sizing1Icon />,
+  2: <Sizing2Icon />,
+  3: <Sizing3Icon />,
+  4: <Sizing4Icon />
+};
 
 class AppContainer extends React.Component {
   constructor(props) {
@@ -43,7 +56,8 @@ class AppContainer extends React.Component {
       dropdownOpen: false,
       datasets: [],
       data: {},
-      car: undefined
+      car: undefined,
+      sizing: 1
     };
   }
 
@@ -58,6 +72,13 @@ class AppContainer extends React.Component {
   endTimeChangeHandler = time => {
     this.setState({
       endTime: time
+    });
+  };
+
+  changeSizing = () => {
+    const max = Math.max(...Object.keys(sizingIcons));
+    this.setState({
+      sizing: this.state.sizing + 1 > max ? 1 : this.state.sizing + 1
     });
   };
 
@@ -162,7 +183,7 @@ class AppContainer extends React.Component {
       this.setState({
         car: e.target.value,
         data: {},
-        datasets: config.datastore.datasets[e.target.value].map(
+        datasets: (config.datastore.datasets[e.target.value] || []).map(
           data => data.label
         )
       });
@@ -264,10 +285,19 @@ class AppContainer extends React.Component {
                         </FormControl>
                       </Grid>
                       <Grid item xs="auto" sm="auto">
-                        <Switch
-                          checked={this.state.liveMode}
-                          onChange={this.liveUpdateHandler}
-                        />
+                        <Tooltip title="Live mode">
+                          <Switch
+                            checked={this.state.liveMode}
+                            onChange={this.liveUpdateHandler}
+                          />
+                        </Tooltip>
+                      </Grid>
+                      <Grid item xs="auto" sm="auto">
+                        <Tooltip title="Change density">
+                          <IconButton onClick={this.changeSizing}>
+                            {sizingIcons[this.state.sizing]}
+                          </IconButton>
+                        </Tooltip>
                       </Grid>
                       <Grid item xs="auto" sm="auto">
                         <CustomButton
@@ -296,7 +326,11 @@ class AppContainer extends React.Component {
                   .filter(data => this.state.datasets.includes(data.label))
                   .map((dataset, index) => {
                     return (
-                      <Grid item xs={12} key={index}>
+                      <Grid
+                        item
+                        xs={12 / this.state.sizing}
+                        key={index + this.state.sizing}
+                      >
                         <Paper>
                           {dataset.element(this.state.data[dataset.id])}
                         </Paper>

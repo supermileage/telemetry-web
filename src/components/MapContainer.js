@@ -13,9 +13,6 @@ import * as source from "ol/source";
 import * as control from "ol/control";
 
 const customStyle = {
-  map: {
-    height: "80vh"
-  },
   popup: {
     backgroundColor: "white",
     border: "1px solid white",
@@ -32,7 +29,8 @@ class MapContainer extends React.Component {
     this.features = {};
     this.state = {
       map: null,
-      loaded: false
+      loaded: false,
+      height: 0
     };
   }
 
@@ -41,7 +39,9 @@ class MapContainer extends React.Component {
       this.features[feature]
         .getSource()
         .getFeatures()
-        .forEach(feat => this.features[feature].getSource().removeFeature(feat));
+        .forEach(feat =>
+          this.features[feature].getSource().removeFeature(feat)
+        );
     }
   };
 
@@ -50,54 +50,52 @@ class MapContainer extends React.Component {
   };
 
   componentDidMount = () => {
-    let map = new ol.Map({
-      view: new ol.View({
-        center: this.formatCoordinate(config.map.defaults.center),
-        zoom: config.map.defaults.zoom
-      }),
-      layers: [
-        new layer.Tile({
-          source: new source.OSM()
-        })
-      ],
-      controls: control
-        .defaults()
-        .extend([new control.FullScreen(), new control.ScaleLine()]),
-      target: "map"
-    });
-
+    window.addEventListener("resize", this.resizeListener);
     this.setState(
       {
-        map: map,
-        loaded: true
+        height: document.getElementById("map").clientWidth * 0.5
       },
-      this.bootstrapOverlay
+      () => {
+        let map = new ol.Map({
+          view: new ol.View({
+            center: this.formatCoordinate(config.map.defaults.center),
+            zoom: config.map.defaults.zoom
+          }),
+          layers: [
+            new layer.Tile({
+              source: new source.OSM()
+            })
+          ],
+          controls: control
+            .defaults()
+            .extend([new control.FullScreen(), new control.ScaleLine()]),
+          target: "map"
+        });
+
+        this.setState(
+          {
+            map: map,
+            loaded: true
+          },
+          this.bootstrapOverlay
+        );
+      }
     );
   };
 
-  shouldComponentUpdate = (nextProps, nextState) => {
-    if (!this.props.data) {
-      return true;
-    }
-    if (this.state.loaded !== nextState.loaded) {
-      return true;
-    }
-    if (nextProps.data && this.props.data.length === nextProps.data.length) {
-      if (JSON.stringify(this.props.data) === JSON.stringify(nextProps.data)) {
-        return false;
-      } else {
-        return true;
-      }
-    } else {
-      return true;
-    }
+  resizeListener = () => {
+    this.setState({
+      height: document.getElementById("map").clientWidth * 0.5
+    });
   };
 
   componentWillUnmount = () => {
+    window.removeEventListener("resize", this.resizeListener);
     this.features = {};
     this.setState({
       map: null,
-      loaded: false
+      loaded: false,
+      height: 0
     });
   };
 
@@ -203,7 +201,7 @@ class MapContainer extends React.Component {
       this.centerMap();
     }
     return (
-      <Box id="map" className={classes.map}>
+      <Box id="map" style={{ height: this.state.height }}>
         <div id="popup" className={classes.popup}>
           <div id="popup-content"></div>
         </div>
