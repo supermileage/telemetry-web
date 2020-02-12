@@ -19,7 +19,7 @@ Each dataset from the datastore takes the following properties:
 `label` - determines the label for the data in the graph (if applicable), and its readable name.  
 `id` - the ID (name of the property in the datastore) of the value. This is the same as the yAxes id in chart options.  
 `handler` - the parsing logic for each element of the returned value; it takes a `retval` (which is generally what we'd append to) and `d`, which is the projection element.  
-`parser` - the final parser of the retval (array, object, etc) from all the projection queries, intended to transform that raw data to what the viz element wants.  
+`parser` - the final parser of the retval (array, object, etc) from all the projection queries, intended to transform that raw data to what the viz element wants. Expects a data prop.  
 `element` - the element builder for our react component, which accepts a data prop (which uses the dataset id as the key when being passed in).  
 `options` - for our charts, not necessarily needed (Maps doesn't have it, for example).
 
