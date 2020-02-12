@@ -41,7 +41,7 @@ let datasets = {
           xAxes: [
             {
               gridLines: {
-                display: false
+                display: true
               },
               type: "time",
               distribution: "linear", // Distances can vary, based on time
@@ -56,7 +56,7 @@ let datasets = {
               id: "Temperature",
               position: "left",
               gridLines: {
-                display: false
+                display: true
               },
               scaleLabel: {
                 display: true,
@@ -101,7 +101,7 @@ let datasets = {
           xAxes: [
             {
               gridLines: {
-                display: false
+                display: true
               },
               type: "time",
               distribution: "linear", // Distances can vary, based on time
@@ -116,7 +116,7 @@ let datasets = {
               id: "Power",
               position: "left",
               gridLines: {
-                display: false
+                display: true
               },
               scaleLabel: {
                 display: true,
@@ -188,7 +188,7 @@ let datasets = {
           xAxes: [
             {
               gridLines: {
-                display: false
+                display: true
               },
               type: "time",
               distribution: "linear", // Distances can vary, based on time
@@ -203,7 +203,7 @@ let datasets = {
               id: "PROTO-Speed",
               position: "left",
               gridLines: {
-                display: false
+                display: true
               },
               scaleLabel: {
                 display: true,
