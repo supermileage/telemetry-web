@@ -3,7 +3,7 @@ import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import { Grid } from "@material-ui/core";
 import MomentUtils from "@date-io/moment";
 
-export default class DayRange extends React.Component {
+export default class DayRange extends React.PureComponent {
   // Render my pickers; all the state is lifted up into
   // the parent element, thus all the changes are handled
   // by props; this element does not have state
@@ -27,7 +27,7 @@ export default class DayRange extends React.Component {
               format="MMM D, hh:mm a"
               onChange={this.props.onChangeEnd}
               value={this.props.endTime}
-              emptyLabel="current"
+              emptyLabel="now"
               disabled={this.props.endTime === null}
             />
           </Grid>

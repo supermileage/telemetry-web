@@ -1,14 +1,11 @@
 import React from "react";
-import { Button, withStyles } from "@material-ui/core";
+import { Button } from "@material-ui/core";
 
-const customStyle = { button: { width: 80 } };
-
-class CustomButton extends React.Component {
+export default class CustomButton extends React.PureComponent {
   render = () => {
-    const { classes } = this.props;
     return (
       <Button
-        className={classes.button}
+        style={{ width: 80 }}
         variant="contained"
         color="primary"
         disabled={this.props.updating || this.props.liveMode}
@@ -19,5 +16,3 @@ class CustomButton extends React.Component {
     );
   };
 }
-
-export default withStyles(customStyle)(CustomButton);

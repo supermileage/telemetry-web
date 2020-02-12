@@ -45,7 +45,7 @@ const sizingIcons = {
   4: <Sizing4Icon />
 };
 
-class AppContainer extends React.Component {
+class AppContainer extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {

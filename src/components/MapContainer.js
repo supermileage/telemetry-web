@@ -1,7 +1,6 @@
 import React from "react";
 import config from "../config/config.js";
 import moment from "moment";
-import { withStyles, Box } from "@material-ui/core";
 
 import "ol/ol.css";
 import * as ol from "ol";
@@ -12,18 +11,10 @@ import * as style from "ol/style";
 import * as source from "ol/source";
 import * as control from "ol/control";
 
-const customStyle = {
-  popup: {
-    backgroundColor: "white",
-    border: "1px solid white",
-    borderRadius: "8px"
-  }
-};
-
 /**
  * Component that holds our map.
  */
-class MapContainer extends React.Component {
+export default class MapContainer extends React.PureComponent {
   constructor(props) {
     super(props);
     this.features = {};
@@ -193,21 +184,24 @@ class MapContainer extends React.Component {
   };
 
   render = () => {
-    const { classes } = this.props;
-
     if (this.state.loaded) {
       this.drawLineOnMap();
       this.drawMarkersOnMap();
       this.centerMap();
     }
     return (
-      <Box id="map" style={{ height: this.state.height }}>
-        <div id="popup" className={classes.popup}>
+      <div id="map" style={{ height: this.state.height }}>
+        <div
+          id="popup"
+          style={{
+            backgroundColor: "white",
+            border: "1px solid white",
+            borderRadius: "8px"
+          }}
+        >
           <div id="popup-content"></div>
         </div>
-      </Box>
+      </div>
     );
   };
 }
-
-export default withStyles(customStyle)(MapContainer);
