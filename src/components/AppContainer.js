@@ -320,7 +320,7 @@ class AppContainer extends React.PureComponent {
         </Container>
 
         <Container className={classes.container}>
-          <Grid container spacing={2}>
+          <Grid container spacing={1} justify="center">
             {this.state.car
               ? config.datastore.datasets[this.state.car]
                   .filter(data => this.state.datasets.includes(data.label))
