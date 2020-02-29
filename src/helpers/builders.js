@@ -1,3 +1,5 @@
+import { hexToRgb } from "./color.js";
+
 export const chartBuilder = (color, label, id, data) => {
   return {
     datasets: [
@@ -8,7 +10,7 @@ export const chartBuilder = (color, label, id, data) => {
         yAxisID: id,
         fill: true,
         lineTension: 0.1,
-        backgroundColor: color,
+        backgroundColor: hexToRgb(color, 0.8),
         borderColor: color,
         borderCapStyle: "butt",
         borderDash: [],
