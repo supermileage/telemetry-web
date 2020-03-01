@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/telemetry-web/precache-manifest.d3616df0650feb1e8103804369f10641.js"
+  "/telemetry-web/precache-manifest.cdf09f3eb7a04cf1096e85cfcedb8bc5.js"
 );
 
 self.addEventListener('message', (event) => {
