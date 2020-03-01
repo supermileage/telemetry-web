@@ -21,7 +21,8 @@ import {
   ExpansionPanelDetails,
   Typography,
   Tooltip,
-  IconButton
+  IconButton,
+  Snackbar
 } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Sizing1Icon from "@material-ui/icons/Filter1";
@@ -57,7 +58,8 @@ class AppContainer extends React.PureComponent {
       datasets: [],
       data: {},
       car: undefined,
-      sizing: 1
+      sizing: 1,
+      snack: undefined
     };
   }
 
@@ -107,42 +109,48 @@ class AppContainer extends React.PureComponent {
   };
 
   getDataHandler = async (lastCursor, retval, datasetId, handler) => {
-    let req = queryBuilder(
-      this.state.liveMode,
-      this.state.startTime,
-      this.state.endTime,
-      datasetId
-    );
-
-    if (lastCursor !== null) req.query.startCursor = lastCursor;
-
-    let response = await fetch(
-      config.datastore.getQueryUrl(),
-      config.datastore.generatePayload(this.props.token, JSON.stringify(req))
-    );
-
-    let json = await response.json();
-
     try {
-      if ("entityResults" in json.batch) {
-        json.batch.entityResults.forEach(d => {
-          handler(retval, d);
-        });
-      }
+      let req = queryBuilder(
+        this.state.liveMode,
+        this.state.startTime,
+        this.state.endTime,
+        datasetId
+      );
 
-      // There are still results remaining
-      if (json.batch.moreResults === "NOT_FINISHED") {
-        return await this.getDataHandler(
-          json.batch.endCursor,
-          retval,
-          datasetId,
-          handler
-        );
+      if (lastCursor !== null) req.query.startCursor = lastCursor;
+
+      let response = await fetch(
+        config.datastore.getQueryUrl(),
+        config.datastore.generatePayload(this.props.token, JSON.stringify(req))
+      );
+
+      let json = await response.json();
+
+      try {
+        if ("entityResults" in json.batch) {
+          json.batch.entityResults.forEach(d => {
+            handler(retval, d);
+          });
+        }
+
+        // There are still results remaining
+        if (json.batch.moreResults === "NOT_FINISHED") {
+          return await this.getDataHandler(
+            json.batch.endCursor,
+            retval,
+            datasetId,
+            handler
+          );
+        }
+      } catch (error) {
+        this.generateSnack(error.message);
+        console.log(error);
       }
+      return retval;
     } catch (error) {
+      this.generateSnack(error.message);
       console.log(error);
     }
-    return retval;
   };
 
   getData = async () => {
@@ -238,12 +246,28 @@ class AppContainer extends React.PureComponent {
     );
   };
 
+  generateSnack = snack => {
+    this.setState({
+      snack: snack
+    });
+  };
+
   render = () => {
     const { classes } = this.props;
 
     return (
       <Fragment>
         <Container className={classes.container}>
+          <Snackbar
+            anchorOrigin={{
+              vertical: "top",
+              horizontal: "center"
+            }}
+            open={this.state.snack !== undefined}
+            autoHideDuration={5000}
+            onClose={() => this.generateSnack(undefined)}
+            message={this.state.snack}
+          />
           <ExpansionPanel>
             <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
               <FormControl
