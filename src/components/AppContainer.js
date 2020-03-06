@@ -63,6 +63,14 @@ class AppContainer extends React.PureComponent {
     };
   }
 
+  componentDidMount = () => {
+    window.addEventListener("beforeunload", (e) => {
+      let retString = "Are you sure? You'll have to log in again";
+      (e || window.event).returnValue = retString;
+      return retString;
+    });
+  }
+
   // Handler functions for our starttime change, which
   // our dayrange will receieve as a prop
   startTimeChangeHandler = time => {
