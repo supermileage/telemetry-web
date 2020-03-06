@@ -124,28 +124,28 @@ class AppContainer extends React.PureComponent {
         config.datastore.generatePayload(this.props.token, JSON.stringify(req))
       );
 
+      if (response.status !== 200) {
+        throw new Error("Permisson denied, try refreshing?");
+      }
+
       let json = await response.json();
 
-      try {
-        if ("entityResults" in json.batch) {
-          json.batch.entityResults.forEach(d => {
-            handler(retval, d);
-          });
-        }
-
-        // There are still results remaining
-        if (json.batch.moreResults === "NOT_FINISHED") {
-          return await this.getDataHandler(
-            json.batch.endCursor,
-            retval,
-            datasetId,
-            handler
-          );
-        }
-      } catch (error) {
-        this.generateSnack(error.message);
-        console.log(error);
+      if ("entityResults" in json.batch) {
+        json.batch.entityResults.forEach(d => {
+          handler(retval, d);
+        });
       }
+
+      // There are still results remaining
+      if (json.batch.moreResults === "NOT_FINISHED") {
+        return await this.getDataHandler(
+          json.batch.endCursor,
+          retval,
+          datasetId,
+          handler
+        );
+      }
+
       return retval;
     } catch (error) {
       this.generateSnack(error.message);
