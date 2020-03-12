@@ -1,14 +1,14 @@
 {
   "files": {
-    "main.js": "/telemetry-web/static/js/main.0cbd1db0.chunk.js",
-    "main.js.map": "/telemetry-web/static/js/main.0cbd1db0.chunk.js.map",
+    "main.js": "/telemetry-web/static/js/main.2277a356.chunk.js",
+    "main.js.map": "/telemetry-web/static/js/main.2277a356.chunk.js.map",
     "runtime-main.js": "/telemetry-web/static/js/runtime-main.2252eb33.js",
     "runtime-main.js.map": "/telemetry-web/static/js/runtime-main.2252eb33.js.map",
     "static/css/2.90d703ac.chunk.css": "/telemetry-web/static/css/2.90d703ac.chunk.css",
     "static/js/2.f96b15fe.chunk.js": "/telemetry-web/static/js/2.f96b15fe.chunk.js",
     "static/js/2.f96b15fe.chunk.js.map": "/telemetry-web/static/js/2.f96b15fe.chunk.js.map",
     "index.html": "/telemetry-web/index.html",
-    "precache-manifest.80b31a0c007d01084a34bfac7b865323.js": "/telemetry-web/precache-manifest.80b31a0c007d01084a34bfac7b865323.js",
+    "precache-manifest.d1356ce19c807e57445dc00f3e29cb99.js": "/telemetry-web/precache-manifest.d1356ce19c807e57445dc00f3e29cb99.js",
     "service-worker.js": "/telemetry-web/service-worker.js",
     "static/css/2.90d703ac.chunk.css.map": "/telemetry-web/static/css/2.90d703ac.chunk.css.map",
     "static/js/2.f96b15fe.chunk.js.LICENSE.txt": "/telemetry-web/static/js/2.f96b15fe.chunk.js.LICENSE.txt"
@@ -17,6 +17,6 @@
     "static/js/runtime-main.2252eb33.js",
     "static/css/2.90d703ac.chunk.css",
     "static/js/2.f96b15fe.chunk.js",
-    "static/js/main.0cbd1db0.chunk.js"
+    "static/js/main.2277a356.chunk.js"
   ]
 }

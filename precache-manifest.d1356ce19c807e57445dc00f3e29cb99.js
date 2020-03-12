@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "de0d59044d8114bf2e253156194dff94",
+    "revision": "454f72a6bf73c5825ea636f059f3bee7",
     "url": "/telemetry-web/index.html"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/telemetry-web/static/js/2.f96b15fe.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "68e8a24c322ef6006f45",
-    "url": "/telemetry-web/static/js/main.0cbd1db0.chunk.js"
+    "revision": "9c5457893a4b5c5006cd",
+    "url": "/telemetry-web/static/js/main.2277a356.chunk.js"
   },
   {
     "revision": "8052496588c8d8d2299d",
