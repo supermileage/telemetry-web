@@ -1,3 +1,5 @@
+![gh-pages deployment](https://github.com/supermileage/telemetry-web/workflows/gh-pages%20deployment/badge.svg)
+
 # Telemetry
 
 View the page [here](http://www.supermileage.ca/telemetry-web/). You'll have to log in with the UBCST Google account for verification.
@@ -10,7 +12,7 @@ The data is sent to a Pub/Sub listener, which has a cloud function subscribed to
 2. Within the directory, run `npm install` to install dependencies. 
 3. Run `npm start` to start the local build server. 
 
-Optionally, `npm run deploy` can be used to update the GitHub Pages site with the latest changes. 
+Optionally, `npm run deploy` can be used to update the GitHub Pages site with the latest changes. You don't have to do this manually though since it'll build and deploy on every push. 
 
 ## `config/datasets.js`
 
