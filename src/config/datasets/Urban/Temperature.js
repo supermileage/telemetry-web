@@ -3,7 +3,7 @@ import { chartBuilder } from "../../../helpers/builders.js";
 import React from "react";
 import Graph from "../../../components/Graph.js";
 
-export default {
+const Temperature = {
   label: "Temperature",
   id: "URBAN-Temperature",
   handler: function(retval, d) {
@@ -64,3 +64,5 @@ export default {
     }
   }
 };
+
+export default Temperature;

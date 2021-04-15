@@ -1,7 +1,7 @@
 import React from "react";
 import MapContainer from "../../../components/MapContainer.js";
 
-export default {
+const Location = {
   label: "Location",
   id: "PROTO-Location",
   handler: function(retval, d) {
@@ -25,3 +25,5 @@ export default {
     return <MapContainer key={this.id} data={data || []} />;
   }
 };
+
+export default Location;

@@ -3,7 +3,7 @@ import { chartBuilder } from "../../../helpers/builders.js";
 import React from "react";
 import Graph from "../../../components/Graph.js";
 
-export default {
+const IAT = {
   label: "IAT",
   id: "PROTO-IAT",
   handler: function(retval, d) {
@@ -63,3 +63,5 @@ export default {
     }
   }
 };
+
+export default IAT;
