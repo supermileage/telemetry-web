@@ -3,14 +3,12 @@ import { chartBuilder } from "../../../helpers/builders.js";
 import React from "react";
 import Graph from "../../../components/Graph.js";
 
-export default {
+const Speed = {
   label: "Speed",
   id: "PROTO-Speed",
   handler: function(retval, d) {
-    let data = d.entity.properties.data.stringValue.split(",");
-
     let elem = {};
-    elem.y = parseFloat(data[data.indexOf("K") - 1]);
+    elem.y = parseFloat(d.entity.properties.data.stringValue);
     elem.x = moment(d.entity.properties.recorded_at.stringValue);
 
     // Check if the last element was greater than 10 minutes ago, we disjoint it then
@@ -65,3 +63,5 @@ export default {
     }
   }
 };
+
+export default Speed;
